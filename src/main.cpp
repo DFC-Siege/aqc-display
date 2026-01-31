@@ -1,8 +1,15 @@
 #include <pico/stdio.h>
+#include <pico/stdlib.h>
+#include <pico/time.h>
 #include <stdio.h>
 
 int main() {
         stdio_init_all();
-        printf("Hello, world!\n");
+
+        while (true) {
+                printf("Hello, world!\n");
+                sleep_ms(1000);
+        }
+
         return 0;
 }
