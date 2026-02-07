@@ -1,5 +1,6 @@
 #pragma once
 
+#include "font/font_types.hpp"
 #include <cstdint>
 #include <displaylib_16/displaylib_16_Font.hpp>
 #include <displaylib_16/st7789.hpp>
@@ -21,7 +22,7 @@ struct Config {
         uint16_t height;
         ST7789_TFT::display_rotate_e rotation;
         uint16_t default_background;
-        uint16_t default_text_color;
-        display_Font_name_e default_font;
+        uint16_t default_foreground;
+        FontType default_font;
 };
 } // namespace Display

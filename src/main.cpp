@@ -3,8 +3,8 @@
 #include <pico/stdio.h>
 
 #include "display/display.hpp"
+#include "display/presets/default.hpp"
 #include "input_manager.hpp"
-#include "presets/default.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 

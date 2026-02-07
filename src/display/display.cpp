@@ -1,9 +1,12 @@
+#include <cstdint>
 #include <hardware/gpio.h>
 #include <string>
 
 #include "config.hpp"
 #include "display.hpp"
 #include "displaylib_16/st7789.hpp"
+#include "font/font_factory.hpp"
+#include "font/font_types.hpp"
 #include "hardware/spi.h"
 
 namespace {
@@ -31,8 +34,8 @@ void Display::initialize(const Config &config) {
         this->config = config;
         rotation = config.rotation;
         background = config.default_background;
-        text_color = config.default_text_color;
-        font = config.default_font;
+        foreground = config.default_foreground;
+        set_font(config.default_font);
 
         reset_display();
 
@@ -42,16 +45,28 @@ void Display::initialize(const Config &config) {
 void Display::reset_display() {
         tft.setRotation(rotation);
         tft.fillScreen(background);
-        tft.setTextColor(text_color, background);
+        tft.setTextColor(foreground, background);
         tft.setCursor(0, 0);
-        tft.setFont(font);
+        tft.setFont(font.font_name);
 }
 
 void Display::clear() {
         tft.fillScreen(background);
 }
 
+void Display::clear(uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+        tft.fillRect(x, y, width, height, background);
+}
+
 void Display::print(const std::string &value) {
         tft.print(value);
+}
+
+void Display::set_cursor(uint16_t x, uint16_t y) {
+        tft.setCursor(0, 0);
+}
+
+void Display::set_font(FontType type) {
+        font = FontFactory::create(type);
 }
 } // namespace Display

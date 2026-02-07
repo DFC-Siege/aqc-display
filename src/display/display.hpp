@@ -7,6 +7,8 @@
 #include <string>
 
 #include "config.hpp"
+#include "font/font.hpp"
+#include "font/font_types.hpp"
 
 namespace Display {
 class Display {
@@ -23,17 +25,21 @@ class Display {
 
         void initialize(const Config &config);
         void clear();
+        void clear(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
         void print(const std::string &value);
         void set_background(Color value);
+        void set_foreground(Color value);
+        void set_font(FontType font);
         void reset_display();
+        void set_cursor(uint16_t x, uint16_t y);
 
       private:
         ST7789_TFT tft;
         Config config;
         ST7789_TFT::display_rotate_e rotation;
         Color background;
-        Color text_color;
-        display_Font_name_e font;
+        Color foreground;
+        Font font;
 
         Display() {
         }

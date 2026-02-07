@@ -4,6 +4,7 @@
 #include <displaylib_16/st7789.hpp>
 
 #include "config.hpp"
+#include "font/font_types.hpp"
 
 namespace Presets {
 inline constexpr Display::Config Default = {.pin_mosi = 3,
@@ -19,6 +20,7 @@ inline constexpr Display::Config Default = {.pin_mosi = 3,
                                             .height = 240,
                                             .rotation = ST7789_TFT::Degrees_270,
                                             .default_background = 0x0000,
-                                            .default_text_color = 0xFFFF,
-                                            .default_font = font_default};
+                                            .default_foreground = 0xFFFF,
+                                            .default_font =
+                                                Display::FontType::DEFAULT};
 }
