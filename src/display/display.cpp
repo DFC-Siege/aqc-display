@@ -1,9 +1,10 @@
-#include "display.hpp"
-#include "config.hpp"
-#include "displaylib_16/st7789.hpp"
-#include "hardware/spi.h"
 #include <hardware/gpio.h>
 #include <string>
+
+#include "config.hpp"
+#include "display.hpp"
+#include "displaylib_16/st7789.hpp"
+#include "hardware/spi.h"
 
 namespace {
 void initialize_gpio(const Display::Config &config) {

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "config.hpp"
 #include <cstdint>
 #include <displaylib_16/displaylib_16_Font.hpp>
 #include <displaylib_16/st7789.hpp>
 #include <hardware/spi.h>
 #include <string>
+
+#include "config.hpp"
 
 namespace Display {
 class Display {

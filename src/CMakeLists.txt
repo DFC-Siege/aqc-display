@@ -1,4 +1,5 @@
 add_subdirectory(display)
+add_subdirectory(ui)
 
 add_executable(${PROJECT_NAME}
     main.cpp
