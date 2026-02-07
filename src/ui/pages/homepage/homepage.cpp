@@ -1,5 +1,6 @@
 #include "homepage.hpp"
 #include "colors.hpp"
+#include "components/rect.hpp"
 #include "components/text/text.hpp"
 #include "display.hpp"
 #include "input_manager.hpp"
@@ -15,12 +16,17 @@ HomePage::HomePage(Display::Display &display,
                    Input::InputManager &input_manager,
                    Sensors::SCD40 &scd_sensor, Sensors::SPS30 &sps_sensor)
     : Page(display, input_manager),
-      temperature_text(Text{display, "Temperature:"}),
-      co2_text(Text{display, "CO2:"}),
-      humidity_text(Text{display, "Humidity:"}),
-      pm1_text(Text{display, "PM1:"}), pm2_text(Text{display, "PM2.5:"}),
-      pm4_text(Text{display, "PM4:"}), pm10_text(Text{display, "PM10:"}),
-      scd_sensor(scd_sensor), sps_sensor(sps_sensor) {
+      temperature_text(Text{display, rect, "Temperature:"}),
+      co2_text(Text{display, rect, "CO2:"}),
+      humidity_text(Text{display, rect, "Humidity:"}),
+      pm1_text(Text{display, rect, "PM1:"}),
+      pm2_text(Text{display, rect, "PM2.5:"}),
+      pm4_text(Text{display, rect, "PM4:"}),
+      pm10_text(Text{display, rect, "PM10:"}), scd_sensor(scd_sensor),
+      sps_sensor(sps_sensor) {
+        const auto &config = display.get_config();
+        rect = Rect{10, 10, static_cast<uint16_t>(config.get_width() - 10),
+                    static_cast<uint16_t>(config.get_height() - 10)};
         setup_positions();
         setup_listeners();
 }

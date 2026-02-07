@@ -1,14 +1,17 @@
 #include "drawable.hpp"
 #include "components/bounding_box.hpp"
 #include "components/postition.hpp"
+#include "components/rect.hpp"
 #include "display.hpp"
 #include "types.hpp"
 
 namespace UI {
-Drawable::Drawable(Display::Display &display, Position position,
-                   BoundingBox bounding_box, Color background, Color foreground)
-    : display(display), position(position), bounding_box(bounding_box),
-      background(background), foreground(foreground) {
+Drawable::Drawable(Display::Display &display, const Rect &rect,
+                   Position position, BoundingBox bounding_box,
+                   Color background, Color foreground)
+    : display(display), rect(rect), position(position),
+      bounding_box(bounding_box), background(background),
+      foreground(foreground) {
 }
 
 void Drawable::clear() {

@@ -29,5 +29,13 @@ struct Config {
                 return rotation == ST7789_TFT::Degrees_270 ||
                        rotation == ST7789_TFT::Degrees_90;
         }
+
+        uint16_t get_width() const {
+                return is_rotated() ? height : width;
+        }
+
+        uint16_t get_height() const {
+                return is_rotated() ? width : height;
+        }
 };
 } // namespace Display

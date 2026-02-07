@@ -1,5 +1,6 @@
 #pragma once
 
+#include "components/rect.hpp"
 #include "display.hpp"
 #include "input_manager.hpp"
 
@@ -9,7 +10,6 @@ class Page {
         Page(Display::Display &display, Input::InputManager &input_manager)
             : display(display), input_manager(input_manager) {
         }
-
         virtual void update() {
         }
         virtual void draw() = 0;
@@ -18,5 +18,6 @@ class Page {
       protected:
         Display::Display &display;
         Input::InputManager &input_manager;
+        Rect rect;
 };
 } // namespace UI
