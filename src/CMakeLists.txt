@@ -2,6 +2,7 @@ add_subdirectory(display)
 add_subdirectory(input)
 add_subdirectory(ui)
 add_subdirectory(sensors)
+add_subdirectory(communication)
 
 add_executable(${PROJECT_NAME}
     main.cpp
@@ -18,6 +19,7 @@ target_link_libraries(${PROJECT_NAME}
     input_lib
     ui_lib
     sensors_lib
+    communication_lib
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "hardware/i2c.h"
-#include "sensor.hpp"
 #include <cstdint>
 #include <pico/error.h>
 #include <pico/types.h>
 #include <string>
+
+#include "hardware/i2c.h"
+#include "sensor.hpp"
 
 namespace Sensors {
 struct SCD40Measurement {
