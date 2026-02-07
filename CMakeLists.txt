@@ -8,10 +8,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(pico_sdk_import.cmake)
 
-project(${PROJECT_NAME})
+project(${PROJECT_NAME} C CXX ASM)
 
 pico_sdk_init()
 
 add_subdirectory(lib/displaylib_16bit_PICO)
 add_subdirectory(src)
-
