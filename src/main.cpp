@@ -9,6 +9,7 @@
 #include "display/presets/default.hpp"
 #include "input_manager.hpp"
 #include "sensors/scd40/scd40.hpp"
+#include "sensors/sps30/sps30.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 
@@ -28,7 +29,9 @@ int main() {
 
         Input::InputManager input_manager;
         Sensors::SCD40 scd_sensor;
-        UI::PageFactory page_factory{display, input_manager, scd_sensor};
+        Sensors::SPS30 sps_sensor;
+        UI::PageFactory page_factory{display, input_manager, scd_sensor,
+                                     sps_sensor};
         UI::UIManager ui_manager{page_factory, display};
 
         multicore_launch_core1(core1_entry);

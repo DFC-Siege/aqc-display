@@ -30,6 +30,5 @@ class SCD40 : public Sensor<SCD40Measurement> {
         absolute_time_t next_measurement_time;
 
         void start_measurement();
-        std::string get_error_reason(int error_code);
 };
 } // namespace Sensors
