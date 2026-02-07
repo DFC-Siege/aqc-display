@@ -8,8 +8,7 @@
 namespace UI {
 HomePage::HomePage(Display::Display &display,
                    Input::InputManager &input_manager)
-    : Page(display, input_manager), text(Text{display}) {
-        text.set_text("yee");
+    : Page(display, input_manager), text(Text{display, "yee"}) {
         input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {
                 this->text.set_text("yeet");
                 this->draw();

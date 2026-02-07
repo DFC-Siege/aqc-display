@@ -13,6 +13,7 @@ namespace UI {
 class Text : public Drawable {
       public:
         Text(Display::Display &display);
+        Text(Display::Display &display, std::string text);
         void draw() override;
         void set_text(const std::string &value);
         void set_background(Color value);

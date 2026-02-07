@@ -17,6 +17,13 @@ Text::Text(Display::Display &display)
                Colors::PRIMARY) {
 }
 
+Text::Text(Display::Display &display, std::string text)
+    : text(text),
+      font(Display::FontFactory::create(Display::FontType::DEFAULT)),
+      Drawable(display, Position{}, BoundingBox{}, Colors::BACKGROUND,
+               Colors::PRIMARY) {
+}
+
 void Text::draw() {
         clear();
         bounding_box = calculate_bounding_box();
