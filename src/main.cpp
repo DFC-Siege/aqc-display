@@ -21,13 +21,13 @@ int main() {
         tft.TFTInitScreenSize(52, 40, 135, 240);
         tft.TFTInitSPIType(24000, spi0);
         tft.TFTST7789Initialize();
-        tft.setRotation(ST7789_TFT::Degrees_90);
+        tft.setRotation(ST7789_TFT::Degrees_270);
 
         tft.fillScreen(tft.C_BLACK);
         tft.setTextColor(tft.C_GREEN, tft.C_BLACK);
         tft.setCursor(15, 50);
-        tft.setFont(font_groTesk);
-        tft.print("Hello World");
+        tft.setFont(font_default);
+        tft.print("Hello World!");
 
         while (true) {
                 tight_loop_contents();
