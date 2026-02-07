@@ -1,8 +1,30 @@
-#include "pico/stdlib.h"
-#include <stdio.h>
+#include "displaylib_16/st7789.hpp"
+#include "hardware/spi.h"
+#include "pico/stdio.h"
+#include "pin_config.h"
+#include <hardware/gpio.h>
+#include <pico/platform/common.h>
 
 int main() {
         stdio_init_all();
-        printf("Hello, world!\n");
-        return 0;
+
+        gpio_init(Pins::TFT_BL);
+        gpio_set_dir(Pins::TFT_BL, GPIO_OUT);
+        gpio_put(Pins::TFT_BL, 1);
+
+        ST7789_TFT tft;
+
+        tft.setupGPIO(Pins::TFT_RST, Pins::TFT_DC, Pins::TFT_CS, Pins::TFT_SCLK,
+                      Pins::TFT_MOSI);
+        tft.TFTInitScreenSize(0, 0, 240, 240);
+        tft.TFTInitSPIType(32000, spi0);
+        tft.TFTST7789Initialize();
+
+        tft.fillScreen(ST7789_TFT::C_BLACK);
+        tft.setTextColor(ST7789_TFT::C_WHITE);
+        tft.writeCharString(20, 100, (char *)"Hello, world!");
+
+        while (true) {
+                tight_loop_contents();
+        }
 }
