@@ -2,6 +2,7 @@
 #include <format>
 
 #include "buttons/button_factory.hpp"
+#include "colors.hpp"
 #include "components/text/text.hpp"
 #include "display.hpp"
 #include "homepage.hpp"
@@ -27,6 +28,9 @@ HomePage::HomePage(Display::Display &display,
                     const auto text =
                         std::format("Temp: {:.1f} C\nCO2: {}\nHum: {:.1f}",
                                     data.temperature, data.co2, data.humidity);
+                    this->text.set_foreground(data.co2 > CO2_THRESHOLD
+                                                  ? Colors::ERROR
+                                                  : Colors::PRIMARY);
                     this->text.set_text(text);
             });
         input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {

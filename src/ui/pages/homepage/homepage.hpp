@@ -18,6 +18,7 @@ class HomePage : public Page {
         void before_destroy() override;
 
       private:
+        static constexpr auto CO2_THRESHOLD = 999;
         Text text;
         Sensors::SCD40 &scd_sensor;
         uint32_t scd_listener_id;
