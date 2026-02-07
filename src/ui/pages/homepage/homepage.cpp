@@ -52,7 +52,7 @@ HomePage::HomePage(Display::Display &display,
                     }
 
                     const auto text = std::format(
-                        "PM1: {:.1f}\nPM2.5: {}\nPM4: {:.1f}\nPM10: {:.1f}",
+                        "PM1: {:.1f}\nPM2.5: {:.1f}\nPM4: {:.1f}\nPM10: {:.1f}",
                         data.pm1_0, data.pm2_5, data.pm4_0, data.pm10_0);
                     this->sps_text.set_text(text);
             });
