@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.13)
 
 set(PICO_SDK_FETCH_FROM_GIT on)
 set(PROJECT_NAME display)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(pico_sdk_import.cmake)
 
