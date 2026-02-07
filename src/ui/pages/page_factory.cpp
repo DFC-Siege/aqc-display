@@ -9,6 +9,8 @@ std::unique_ptr<Page> PageFactory::create(PageType type) const {
         switch (type) {
         case PageType::HOME:
                 return std::make_unique<HomePage>(display);
+        default:
+                return nullptr;
         }
 }
 } // namespace UI

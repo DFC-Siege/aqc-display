@@ -12,6 +12,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
     display_lib
+    ui_lib
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})
