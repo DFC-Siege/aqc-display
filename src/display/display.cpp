@@ -1,25 +1,49 @@
-#include "display.h"
+#include "display.hpp"
+#include "config.hpp"
 #include "displaylib_16/st7789.hpp"
 #include "hardware/spi.h"
 #include <hardware/gpio.h>
 #include <string>
 
-namespace Display {
-void Display::initialize() {
-        gpio_init(TFT_BL);
-        gpio_set_dir(TFT_BL, GPIO_OUT);
-        gpio_put(TFT_BL, 1);
+namespace {
+void initialize_gpio(const Display::Config &config) {
+        gpio_init(config.pin_bl);
+        gpio_set_dir(config.pin_bl, GPIO_OUT);
+        gpio_put(config.pin_bl, 1);
+}
 
-        tft.setupGPIO(TFT_RST, TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI);
-        tft.TFTInitScreenSize(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT);
-        tft.TFTInitSPIType(BAUDRATE, spi0);
+void initialize_tft(ST7789_TFT &tft, const Display::Config &config) {
+        tft.setupGPIO(config.pin_rst, config.pin_dc, config.pin_cs,
+                      config.pin_sclk, config.pin_mosi);
+        tft.TFTInitScreenSize(config.offset_x, config.offset_y, config.width,
+                              config.height);
+        tft.TFTInitSPIType(config.baudrate, spi0);
         tft.TFTST7789Initialize();
-        tft.setRotation(ROTATION);
+}
+} // namespace
+
+namespace Display {
+void Display::initialize(const Config &config) {
+        initialize_gpio(config);
+        initialize_tft(tft, config);
+
+        this->config = config;
+        rotation = config.rotation;
+        background = config.default_background;
+        text_color = config.default_text_color;
+        font = config.default_font;
+
+        reset_display();
+
+        initialized = true;
+}
+
+void Display::reset_display() {
+        tft.setRotation(rotation);
         tft.fillScreen(background);
         tft.setTextColor(text_color, background);
         tft.setCursor(0, 0);
-        tft.setFont(DEFAULT_FONT);
-        initialized = true;
+        tft.setFont(font);
 }
 
 void Display::clear() {
