@@ -63,7 +63,7 @@ void Display::print(const std::string &value) {
 }
 
 void Display::set_cursor(uint16_t x, uint16_t y) {
-        tft.setCursor(0, 0);
+        tft.setCursor(x, y);
 }
 
 void Display::set_font(FontType type) {

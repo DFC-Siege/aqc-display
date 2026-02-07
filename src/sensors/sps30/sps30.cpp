@@ -2,6 +2,7 @@
 #include "hardware/gpio.h"
 #include "pico/time.h"
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <hardware/i2c.h>
 #include <hardware/structs/io_bank0.h>
@@ -70,6 +71,10 @@ void SPS30::process() {
         last_measurement.pm4_0 = parse_float(&data[12]);
         last_measurement.pm10_0 = parse_float(&data[18]);
         last_measurement.typical_particle_size = parse_float(&data[54]);
+        printf("SPS30: PM1: %.2f ppm, PM2.5: %.2f ppm, PM4: %.2f ppm, PM10: "
+               "%.2f ppm\n",
+               last_measurement.pm1_0, last_measurement.pm2_5,
+               last_measurement.pm4_0, last_measurement.pm10_0);
 
         next_measurement_time = make_timeout_time_ms(1000);
         invoke_listeners(last_measurement);

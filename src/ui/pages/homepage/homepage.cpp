@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <cstdio>
 #include <format>
 
@@ -19,6 +20,11 @@ HomePage::HomePage(Display::Display &display,
       scd_text(Text{display, "waiting for sensor"}),
       sps_text(Text{display, "waiting for sensor"}), scd_sensor(scd_sensor),
       sps_sensor(sps_sensor) {
+        const auto &config = display.get_config();
+        const uint16_t y =
+            config.is_rotated() ? config.width / 2 : config.height / 2;
+        sps_text.set_position({0, y});
+        sps_text.draw();
         scd_listener_id =
             scd_sensor.add_listener([this](Sensors::SCD40Measurement data) {
                     if (!data.error.empty()) {
@@ -41,14 +47,14 @@ HomePage::HomePage(Display::Display &display,
                     if (!data.error.empty()) {
                             const auto text =
                                 std::format("error: {}", data.error);
-                            this->scd_text.set_text(text);
+                            this->sps_text.set_text(text);
                             return;
                     }
 
                     const auto text = std::format(
                         "PM1: {:.1f}\nPM2.5: {}\nPM4: {:.1f}\nPM10: {:.1f}",
                         data.pm1_0, data.pm2_5, data.pm4_0, data.pm10_0);
-                    this->scd_text.set_text(text);
+                    this->sps_text.set_text(text);
             });
         input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {
                 this->scd_text.set_text("yeet");
@@ -70,7 +76,6 @@ void HomePage::before_destroy() {
 void HomePage::draw() {
         display.set_cursor(0, 0);
         scd_text.draw();
-        display.set_cursor(0, display.get_config().height / 2);
         sps_text.draw();
 }
 } // namespace UI

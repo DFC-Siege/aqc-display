@@ -24,5 +24,10 @@ struct Config {
         uint16_t default_background;
         uint16_t default_foreground;
         FontType default_font;
+
+        bool is_rotated() const {
+                return rotation == ST7789_TFT::Degrees_270 ||
+                       rotation == ST7789_TFT::Degrees_90;
+        }
 };
 } // namespace Display
