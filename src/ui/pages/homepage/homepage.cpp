@@ -1,4 +1,5 @@
 #include "homepage.hpp"
+#include "buttons/button_factory.hpp"
 #include "colors.hpp"
 #include "components/border.hpp"
 #include "components/rect.hpp"
@@ -36,6 +37,17 @@ HomePage::HomePage(Display::Display &display,
         border = Border{1, border_rect, 0, Colors::ERROR};
         setup_positions();
         setup_listeners();
+
+        input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {
+                border->color = border->color == Colors::ERROR ? Colors::WARNING
+                                                               : Colors::ERROR;
+                draw();
+        });
+        input_manager.set_action(Input::ButtonType::BUTTON2, [this]() {
+                border->color = border->color == Colors::ERROR ? Colors::WARNING
+                                                               : Colors::ERROR;
+                draw();
+        });
 }
 
 void HomePage::setup_positions() {
