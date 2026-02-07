@@ -7,6 +7,7 @@
 #include "homepage.hpp"
 #include "input_manager.hpp"
 #include "pages/page.hpp"
+#include "scd40/scd40.hpp"
 
 namespace UI {
 HomePage::HomePage(Display::Display &display,

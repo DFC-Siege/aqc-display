@@ -37,10 +37,10 @@ void SCD40::process() {
 
         if (result != PICO_ERROR_GENERIC) {
                 last_measurement.co2 = (data[0] << 8) | data[1];
-                last_measurement.temp =
+                last_measurement.temperature =
                     -45.0f +
                     175.0f * (float)((data[3] << 8) | data[4]) / 65536.0f;
-                last_measurement.hum =
+                last_measurement.humidity =
                     100.0f * (float)((data[6] << 8) | data[7]) / 65536.0f;
 
                 invoke_listeners(last_measurement);

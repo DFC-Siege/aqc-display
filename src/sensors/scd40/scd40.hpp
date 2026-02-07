@@ -8,8 +8,8 @@
 namespace Sensors {
 struct SCD40Measurement {
         uint16_t co2 = 0;
-        float temp = 0.0f;
-        float hum = 0.0f;
+        float temperature = 0.0f;
+        float humidity = 0.0f;
 };
 
 class SCD40 : public Sensor<SCD40Measurement> {

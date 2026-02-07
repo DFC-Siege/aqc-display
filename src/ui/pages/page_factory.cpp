@@ -8,7 +8,8 @@ namespace UI {
 std::unique_ptr<Page> PageFactory::create(PageType type) const {
         switch (type) {
         case PageType::HOME:
-                return std::make_unique<HomePage>(display, input_manager);
+                return std::make_unique<HomePage>(display, input_manager,
+                                                  scd_sensor);
         }
 
         return nullptr;
