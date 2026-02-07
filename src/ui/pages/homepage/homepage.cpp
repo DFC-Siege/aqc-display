@@ -17,6 +17,13 @@ HomePage::HomePage(Display::Display &display,
       scd_sensor(scd_sensor) {
         scd_listener_id =
             scd_sensor.add_listener([this](Sensors::SCD40Measurement data) {
+                    if (!data.error.empty()) {
+                            const auto text =
+                                std::format("error: {}", data.error);
+                            this->text.set_text(text);
+                            return;
+                    }
+
                     const auto text =
                         std::format("Temp: {:.1f} C", data.temperature);
                     this->text.set_text(text);
