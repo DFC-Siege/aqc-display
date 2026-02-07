@@ -5,8 +5,14 @@
 #include "input_manager.hpp"
 
 namespace Input {
-void InputManager::set_action(ButtonType type, std::function<void()> function) {
-        buttons[type] = std::move(ButtonFactory::create(type, function));
+void InputManager::set_action(ButtonType type, std::function<void()> on_press) {
+        buttons[type] = std::move(ButtonFactory::create(type, on_press));
+}
+
+void InputManager::set_action(ButtonType type, std::function<void()> on_press,
+                              std::function<void()> on_hold) {
+        buttons[type] =
+            std::move(ButtonFactory::create(type, on_press, on_hold));
 }
 
 void InputManager::clear_all() {

@@ -12,7 +12,9 @@ class InputManager {
       public:
         void clear_all();
         void clear_button(ButtonType type);
-        void set_action(ButtonType type, std::function<void()> function);
+        void set_action(ButtonType type, std::function<void()> on_click);
+        void set_action(ButtonType type, std::function<void()> on_click,
+                        std::function<void()> on_hold);
         void update();
 
       private:
