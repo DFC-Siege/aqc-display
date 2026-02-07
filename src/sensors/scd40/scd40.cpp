@@ -36,8 +36,10 @@ void SCD40::process() {
 
         int result = i2c_read_blocking(I2C_PORT, ADDR, data, 9, false);
 
-        if (result != PICO_OK) {
+        if (result < 0) {
                 last_measurement.error = get_error_reason(result);
+                printf("SCD40 error: %s\n", last_measurement.error.c_str());
+                invoke_listeners(last_measurement);
                 return;
         }
 
@@ -47,6 +49,10 @@ void SCD40::process() {
             -45.0f + 175.0f * (float)((data[3] << 8) | data[4]) / 65536.0f;
         last_measurement.humidity =
             100.0f * (float)((data[6] << 8) | data[7]) / 65536.0f;
+
+        printf("SCD40: CO2: %u ppm, Temp: %.2f C, Humidity: %.2f%%\n",
+               last_measurement.co2, last_measurement.temperature,
+               last_measurement.humidity);
 
         invoke_listeners(last_measurement);
 }
