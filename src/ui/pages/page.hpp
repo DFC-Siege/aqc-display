@@ -12,6 +12,7 @@ class Page {
 
         virtual void update() = 0;
         virtual void draw() = 0;
+        virtual void before_destroy() = 0;
 
       protected:
         Display::Display &display;
