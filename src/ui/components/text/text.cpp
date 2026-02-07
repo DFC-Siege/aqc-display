@@ -49,8 +49,7 @@ Display::Font Text::get_font() const {
 
 BoundingBox Text::calculate_bounding_box() const {
         const auto &config = display.get_config();
-        const uint32_t screen_limit =
-            config.is_rotated() ? config.height : config.width;
+        const uint32_t screen_limit = config.get_width();
         const auto max_width = rect.width - rect.x;
 
         const uint32_t effective_limit =
