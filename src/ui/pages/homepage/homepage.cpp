@@ -48,6 +48,7 @@ HomePage::HomePage(Display::Display &display,
                                                                : Colors::ERROR;
                 draw();
         });
+        draw();
 }
 
 void HomePage::setup_positions() {
@@ -64,11 +65,15 @@ void HomePage::setup_positions() {
 }
 
 void HomePage::setup_listeners() {
-        scd_listener_id = scd_sensor.add_listener(
-            [this](const auto &data) { update_scd_metrics(data); });
+        scd_listener_id = scd_sensor.add_listener([this](const auto &data) {
+                update_scd_metrics(data);
+                draw();
+        });
 
-        sps_listener_id = sps_sensor.add_listener(
-            [this](const auto &data) { update_sps_metrics(data); });
+        sps_listener_id = sps_sensor.add_listener([this](const auto &data) {
+                update_sps_metrics(data);
+                draw();
+        });
 }
 
 void HomePage::update_scd_metrics(const Sensors::SCD40Measurement &data) {

@@ -40,7 +40,6 @@ void Text::draw() {
 
 void Text::set_text(const std::string &value) {
         text = value;
-        draw();
 }
 
 Display::Font Text::get_font() const {
