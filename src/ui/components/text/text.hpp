@@ -18,6 +18,7 @@ class Text : public Drawable {
         void set_text(const std::string &value);
         void set_background(Color value);
         void set_font(Display::FontType font);
+        Display::Font get_font() const;
 
       private:
         std::string text;

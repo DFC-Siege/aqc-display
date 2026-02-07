@@ -1,81 +1,113 @@
-#include <cstdint>
-#include <cstdio>
-#include <format>
-
-#include "buttons/button_factory.hpp"
+#include "homepage.hpp"
 #include "colors.hpp"
 #include "components/text/text.hpp"
 #include "display.hpp"
-#include "homepage.hpp"
 #include "input_manager.hpp"
 #include "pages/page.hpp"
 #include "scd40/scd40.hpp"
 #include "sps30/sps30.hpp"
+#include <cstdint>
+#include <format>
 
 namespace UI {
+
 HomePage::HomePage(Display::Display &display,
                    Input::InputManager &input_manager,
                    Sensors::SCD40 &scd_sensor, Sensors::SPS30 &sps_sensor)
     : Page(display, input_manager),
-      scd_text(Text{display, "waiting for sensor"}),
-      sps_text(Text{display, "waiting for sensor"}), scd_sensor(scd_sensor),
-      sps_sensor(sps_sensor) {
-        const auto &config = display.get_config();
-        const uint16_t y =
-            config.is_rotated() ? config.width / 2 : config.height / 2;
-        sps_text.set_position({0, y});
-        sps_text.draw();
-        scd_listener_id =
-            scd_sensor.add_listener([this](Sensors::SCD40Measurement data) {
-                    if (!data.error.empty()) {
-                            const auto text =
-                                std::format("error: {}", data.error);
-                            this->scd_text.set_text(text);
-                            return;
-                    }
-
-                    const auto text =
-                        std::format("Temp: {:.1f} C\nCO2: {}\nHum: {:.1f}",
-                                    data.temperature, data.co2, data.humidity);
-                    this->scd_text.set_foreground(data.co2 > CO2_THRESHOLD
-                                                      ? Colors::ERROR
-                                                      : Colors::PRIMARY);
-                    this->scd_text.set_text(text);
-            });
-        sps_listener_id =
-            sps_sensor.add_listener([this](Sensors::SPS30Measurement data) {
-                    if (!data.error.empty()) {
-                            const auto text =
-                                std::format("error: {}", data.error);
-                            this->sps_text.set_text(text);
-                            return;
-                    }
-
-                    const auto text = std::format(
-                        "PM1: {:.1f}\nPM2.5: {:.1f}\nPM4: {:.1f}\nPM10: {:.1f}",
-                        data.pm1_0, data.pm2_5, data.pm4_0, data.pm10_0);
-                    this->sps_text.set_text(text);
-            });
-        input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {
-                this->scd_text.set_text("yeet");
-                this->draw();
-        });
-        input_manager.set_action(Input::ButtonType::BUTTON2, [this]() {
-                this->scd_text.set_text("yeehaw");
-                this->draw();
-        });
+      temperature_text(Text{display, "Temperature:"}),
+      co2_text(Text{display, "CO2:"}),
+      humidity_text(Text{display, "Humidity:"}),
+      pm1_text(Text{display, "PM1:"}), pm2_text(Text{display, "PM2.5:"}),
+      pm4_text(Text{display, "PM4:"}), pm10_text(Text{display, "PM10:"}),
+      scd_sensor(scd_sensor), sps_sensor(sps_sensor) {
+        setup_positions();
+        setup_listeners();
 }
 
-void HomePage::update() {
+void HomePage::setup_positions() {
+        const uint16_t h = temperature_text.get_font().height;
+
+        temperature_text.set_position({0, 0});
+        co2_text.set_position({0, h});
+        humidity_text.set_position({0, static_cast<uint16_t>(h * 2)});
+
+        pm1_text.set_position({0, static_cast<uint16_t>(h * 4)});
+        pm2_text.set_position({0, static_cast<uint16_t>(h * 5)});
+        pm4_text.set_position({0, static_cast<uint16_t>(h * 6)});
+        pm10_text.set_position({0, static_cast<uint16_t>(h * 7)});
+}
+
+void HomePage::setup_listeners() {
+        scd_listener_id = scd_sensor.add_listener(
+            [this](const auto &data) { update_scd_metrics(data); });
+
+        sps_listener_id = sps_sensor.add_listener(
+            [this](const auto &data) { update_sps_metrics(data); });
+}
+
+void HomePage::update_scd_metrics(const Sensors::SCD40Measurement &data) {
+        temperature_text.set_text(
+            std::format("Temperature: {:.1f} C", data.temperature));
+        if (data.temperature > 25.0f)
+                temperature_text.set_foreground(Colors::ERROR);
+        else if (data.temperature > 23.0f)
+                temperature_text.set_foreground(Colors::WARNING);
+        else
+                temperature_text.set_foreground(Colors::PRIMARY);
+
+        humidity_text.set_text(
+            std::format("Humidity: {:.1f} %", data.humidity));
+        if (data.humidity > 60.0f || data.humidity < 30.0f)
+                humidity_text.set_foreground(Colors::WARNING);
+        else
+                humidity_text.set_foreground(Colors::PRIMARY);
+
+        co2_text.set_text(std::format("CO2: {} ppm", data.co2));
+        if (data.co2 > 1500)
+                co2_text.set_foreground(Colors::ERROR);
+        else if (data.co2 > 1000)
+                co2_text.set_foreground(Colors::WARNING);
+        else
+                co2_text.set_foreground(Colors::PRIMARY);
+}
+
+void HomePage::update_sps_metrics(const Sensors::SPS30Measurement &data) {
+        auto set_pm_color = [](Text &t, float val, float warn, float err) {
+                if (val > err)
+                        t.set_foreground(Colors::ERROR);
+                else if (val > warn)
+                        t.set_foreground(Colors::WARNING);
+                else
+                        t.set_foreground(Colors::PRIMARY);
+        };
+
+        pm1_text.set_text(std::format("PM1.0: {:.1f}", data.pm1_0));
+        set_pm_color(pm1_text, data.pm1_0, 10.0f, 30.0f);
+
+        pm2_text.set_text(std::format("PM2.5: {:.1f}", data.pm2_5));
+        set_pm_color(pm2_text, data.pm2_5, 12.0f, 35.5f);
+
+        pm4_text.set_text(std::format("PM4.0: {:.1f}", data.pm4_0));
+        set_pm_color(pm4_text, data.pm4_0, 25.0f, 50.0f);
+
+        pm10_text.set_text(std::format("PM10: {:.1f}", data.pm10_0));
+        set_pm_color(pm10_text, data.pm10_0, 54.0f, 154.0f);
+}
+
+void HomePage::draw() {
+        temperature_text.draw();
+        co2_text.draw();
+        humidity_text.draw();
+        pm1_text.draw();
+        pm2_text.draw();
+        pm4_text.draw();
+        pm10_text.draw();
 }
 
 void HomePage::before_destroy() {
         scd_sensor.remove_listener(scd_listener_id);
+        sps_sensor.remove_listener(sps_listener_id);
 }
 
-void HomePage::draw() {
-        display.set_cursor(0, 0);
-        scd_text.draw();
-        sps_text.draw();
-}
 } // namespace UI

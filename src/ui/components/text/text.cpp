@@ -8,6 +8,7 @@
 #include "components/drawable.hpp"
 #include "components/postition.hpp"
 #include "display.hpp"
+#include "font/font.hpp"
 #include "font/font_factory.hpp"
 #include "font/font_types.hpp"
 #include "text.hpp"
@@ -38,6 +39,10 @@ void Text::draw() {
 void Text::set_text(const std::string &value) {
         text = value;
         draw();
+}
+
+Display::Font Text::get_font() const {
+        return font;
 }
 
 BoundingBox Text::calculate_bounding_box() const {

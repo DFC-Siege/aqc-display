@@ -10,7 +10,8 @@ class Page {
             : display(display), input_manager(input_manager) {
         }
 
-        virtual void update() = 0;
+        virtual void update() {
+        }
         virtual void draw() = 0;
         virtual void before_destroy() = 0;
 
