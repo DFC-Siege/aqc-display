@@ -32,6 +32,7 @@ class Display {
         void set_font(FontType font);
         void reset_display();
         void set_cursor(uint16_t x, uint16_t y);
+        Config get_config() const;
 
       private:
         ST7789_TFT tft;

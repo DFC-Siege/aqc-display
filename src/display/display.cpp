@@ -77,4 +77,8 @@ void Display::set_foreground(Color color) {
 void Display::set_background(Color color) {
         background = color;
 }
+
+Config Display::get_config() const {
+        return config;
+}
 } // namespace Display

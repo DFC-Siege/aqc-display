@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdint>
 #include <string>
 
@@ -39,7 +40,15 @@ void Text::set_text(const std::string &value) {
 }
 
 BoundingBox Text::calculate_bounding_box() const {
-        const uint16_t width = font.width * text.size();
-        return {width, font.height};
+        const uint32_t screen_width = display.get_config().width;
+        const uint32_t total_width = (uint32_t)font.width * text.size();
+        uint16_t box_width =
+            (total_width > screen_width) ? screen_width : total_width;
+        uint32_t lines = (total_width + screen_width - 1) / screen_width;
+        if (lines == 0 && !text.empty())
+                lines = 1;
+        uint16_t box_height = lines * font.height;
+
+        return {(uint8_t)box_width, (uint8_t)box_height};
 }
 } // namespace UI
