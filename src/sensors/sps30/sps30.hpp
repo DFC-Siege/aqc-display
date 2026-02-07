@@ -26,8 +26,8 @@ class SPS30 : public Sensor<SPS30Measurement> {
 
       private:
         static constexpr auto I2C_PORT = i2c0;
-        static constexpr auto SDA_PIN = 12;
-        static constexpr auto SCL_PIN = 13;
+        static constexpr auto SDA_PIN = 24;
+        static constexpr auto SCL_PIN = 21;
         static constexpr auto BAUDRATE = 100000;
         static constexpr auto ADDR = 0x69;
 
