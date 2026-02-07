@@ -18,12 +18,14 @@ void Display::initialize() {
         tft.TFTST7789Initialize();
         tft.setRotation(ST7789_TFT::Degrees_270);
         tft.fillScreen(tft.C_BLACK);
-        tft.setTextColor(tft.C_GREEN, tft.C_BLACK);
+        tft.setTextColor(text_color, tft.C_BLACK);
         tft.setCursor(0, 0);
         tft.setFont(font_default);
+        initialized = true;
 }
 
 void Display::clear() {
+        tft.fillScreen(background);
 }
 
 void Display::print(const std::string &value) {
