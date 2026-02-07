@@ -25,6 +25,6 @@ class Text : public Drawable {
       private:
         std::string text;
         Display::Font font;
-        BoundingBox calculate_bounding_box() const;
+        BoundingBox calculate_bounding_box(std::string text) const;
 };
 } // namespace UI

@@ -30,11 +30,11 @@ Text::Text(Display::Display &display, const Rect &rect, std::string text)
 
 void Text::draw() {
         clear();
-        bounding_box = calculate_bounding_box();
+        const auto &text_to_draw = wrap_text();
+        bounding_box = calculate_bounding_box(text_to_draw);
         display.set_cursor(rect.x + position.x, rect.y + position.y);
         display.set_background(background);
         display.set_foreground(foreground);
-        const auto &text_to_draw = wrap_text();
         display.print(text_to_draw);
 }
 
@@ -47,18 +47,16 @@ Display::Font Text::get_font() const {
         return font;
 }
 
-BoundingBox Text::calculate_bounding_box() const {
+BoundingBox Text::calculate_bounding_box(std::string text) const {
         const auto &config = display.get_config();
         const uint32_t screen_limit = config.get_width();
         const auto max_width = rect.width - rect.x;
-
         const uint32_t effective_limit =
             (max_width > 0) ? max_width : screen_limit;
 
         uint32_t max_width_observed = 0;
         uint32_t current_line_width = 0;
         uint32_t lines = text.empty() ? 0 : 1;
-
         for (char c : text) {
                 if (c == '\n') {
                         lines++;

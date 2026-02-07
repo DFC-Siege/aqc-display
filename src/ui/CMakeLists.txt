@@ -1,6 +1,7 @@
 add_library(ui_lib STATIC 
         ui_manager.cpp
         pages/page_factory.cpp
+        pages/page.cpp
         pages/homepage/homepage.cpp
         components/drawable.cpp
         components/text/text.cpp

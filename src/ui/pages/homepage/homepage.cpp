@@ -1,5 +1,6 @@
 #include "homepage.hpp"
 #include "colors.hpp"
+#include "components/border.hpp"
 #include "components/rect.hpp"
 #include "components/text/text.hpp"
 #include "display.hpp"
@@ -28,6 +29,11 @@ HomePage::HomePage(Display::Display &display,
         rect = Rect{PADDING, PADDING,
                     static_cast<uint16_t>(config.get_width() - PADDING),
                     static_cast<uint16_t>(config.get_height() - PADDING)};
+        const auto border_rect =
+            Rect{PADDING - 1, PADDING - 1,
+                 static_cast<uint16_t>(config.get_width() - PADDING + 1),
+                 static_cast<uint16_t>(config.get_height() - PADDING + 1)};
+        border = Border{1, border_rect, 0, Colors::ERROR};
         setup_positions();
         setup_listeners();
 }
@@ -103,6 +109,8 @@ void HomePage::update_sps_metrics(const Sensors::SPS30Measurement &data) {
 }
 
 void HomePage::draw() {
+        Page::draw();
+
         temperature_text.draw();
         co2_text.draw();
         humidity_text.draw();
