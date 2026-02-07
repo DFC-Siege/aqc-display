@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <utility>
 
 #include "display.hpp"
 #include "pages/page.hpp"
@@ -17,10 +16,7 @@ class UIManager {
         }
 
         void update();
-
-        void change_page(PageType type) {
-                page = std::move(page_factory.create(type));
-        }
+        void change_page(PageType type);
 
       private:
         bool initialized = false;
