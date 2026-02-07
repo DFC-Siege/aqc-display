@@ -17,11 +17,7 @@ class HomePage : public Page {
         void before_destroy() override;
 
       private:
-        void setup_positions();
-        void setup_listeners();
-        void update_scd_metrics(const Sensors::SCD40Measurement &data);
-        void update_sps_metrics(const Sensors::SPS30Measurement &data);
-
+        static constexpr auto PADDING = 8;
         Text temperature_text;
         Text co2_text;
         Text humidity_text;
@@ -29,10 +25,14 @@ class HomePage : public Page {
         Text pm2_text;
         Text pm4_text;
         Text pm10_text;
-
         Sensors::SCD40 &scd_sensor;
         Sensors::SPS30 &sps_sensor;
         uint32_t scd_listener_id;
         uint32_t sps_listener_id;
+
+        void setup_positions();
+        void setup_listeners();
+        void update_scd_metrics(const Sensors::SCD40Measurement &data);
+        void update_sps_metrics(const Sensors::SPS30Measurement &data);
 };
 } // namespace UI

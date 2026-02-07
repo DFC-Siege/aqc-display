@@ -25,8 +25,9 @@ HomePage::HomePage(Display::Display &display,
       pm10_text(Text{display, rect, "PM10:"}), scd_sensor(scd_sensor),
       sps_sensor(sps_sensor) {
         const auto &config = display.get_config();
-        rect = Rect{10, 10, static_cast<uint16_t>(config.get_width() - 10),
-                    static_cast<uint16_t>(config.get_height() - 10)};
+        rect = Rect{PADDING, PADDING,
+                    static_cast<uint16_t>(config.get_width() - PADDING),
+                    static_cast<uint16_t>(config.get_height() - PADDING)};
         setup_positions();
         setup_listeners();
 }
