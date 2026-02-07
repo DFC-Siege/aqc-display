@@ -26,8 +26,8 @@ class SerialManager {
 
       private:
         static constexpr uint BAUDRATE = 115200;
-        static constexpr auto TX_PIN = 0;
-        static constexpr auto RX_PIN = 1;
+        static constexpr auto TX_PIN = 12;
+        static constexpr auto RX_PIN = 13;
         std::vector<Listener> listeners;
         std::queue<std::string> to_be_invoked;
         std::queue<std::string> to_be_sent;
