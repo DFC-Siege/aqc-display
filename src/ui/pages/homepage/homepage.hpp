@@ -1,8 +1,8 @@
 #pragma once
 
+#include "components/text/text.hpp"
 #include "display.hpp"
 #include "input_manager.hpp"
-#include "pages/components/text/text.hpp"
 #include "pages/page.hpp"
 
 namespace UI {

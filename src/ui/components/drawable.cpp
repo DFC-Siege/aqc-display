@@ -1,7 +1,7 @@
 #include "drawable.hpp"
+#include "components/bounding_box.hpp"
+#include "components/postition.hpp"
 #include "display.hpp"
-#include "pages/components/bounding_box.hpp"
-#include "pages/components/postition.hpp"
 #include "types.hpp"
 
 namespace UI {

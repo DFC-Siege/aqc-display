@@ -2,6 +2,8 @@ add_library(ui_lib STATIC
         ui_manager.cpp
         pages/page_factory.cpp
         pages/homepage/homepage.cpp
+        components/drawable.cpp
+        components/text/text.cpp
 )
 
 target_link_libraries(ui_lib PUBLIC display_lib)

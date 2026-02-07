@@ -1,8 +1,8 @@
 #pragma once
 
+#include "components/bounding_box.hpp"
+#include "components/postition.hpp"
 #include "display.hpp"
-#include "pages/components/bounding_box.hpp"
-#include "pages/components/postition.hpp"
 #include "types.hpp"
 
 namespace UI {
@@ -10,6 +10,8 @@ class Drawable {
       public:
         Drawable(Display::Display &display, Position position,
                  BoundingBox bounding_box, Color background, Color foreground);
+        virtual void draw() = 0;
+
         void clear();
         void set_position(const Position &position);
         void set_background(Color color);

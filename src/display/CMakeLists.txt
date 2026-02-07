@@ -1,4 +1,7 @@
-add_library(display_lib STATIC display.cpp)
+add_library(display_lib STATIC 
+        display.cpp
+        font/font_factory.cpp
+)
 
 target_include_directories(display_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

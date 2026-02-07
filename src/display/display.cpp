@@ -69,4 +69,12 @@ void Display::set_cursor(uint16_t x, uint16_t y) {
 void Display::set_font(FontType type) {
         font = FontFactory::create(type);
 }
+
+void Display::set_foreground(Color color) {
+        foreground = color;
+}
+
+void Display::set_background(Color color) {
+        background = color;
+}
 } // namespace Display
