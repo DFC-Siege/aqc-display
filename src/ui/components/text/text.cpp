@@ -43,18 +43,36 @@ void Text::set_text(const std::string &value) {
 
 BoundingBox Text::calculate_bounding_box() const {
         const auto &config = display.get_config();
-        bool rotated = config.rotation == ST7789_TFT::Degrees_270 ||
-                       ST7789_TFT::Degrees_90;
+        const bool rotated = (config.rotation == ST7789_TFT::Degrees_270 ||
+                              config.rotation == ST7789_TFT::Degrees_90);
         const uint32_t screen_width = rotated ? config.height : config.width;
-        const uint32_t total_width = (uint32_t)font.width * text.size();
 
-        uint16_t box_width =
-            (total_width > screen_width) ? screen_width : total_width;
-        uint32_t lines = (total_width + screen_width - 1) / screen_width;
+        uint32_t max_width_observed = 0;
+        uint32_t current_line_width = 0;
+        uint32_t lines = text.empty() ? 0 : 1;
 
-        if (lines == 0 && !text.empty())
-                lines = 1;
+        for (char c : text) {
+                if (c == '\n') {
+                        lines++;
+                        current_line_width = 0;
+                        continue;
+                }
 
+                current_line_width += font.width;
+
+                if (current_line_width > screen_width) {
+                        lines++;
+                        current_line_width = font.width;
+                }
+
+                if (current_line_width > max_width_observed) {
+                        max_width_observed = current_line_width;
+                }
+        }
+
+        uint16_t box_width = (max_width_observed > screen_width)
+                                 ? screen_width
+                                 : max_width_observed;
         uint16_t box_height = lines * font.height;
 
         printf("[UI LOG] Text: \"%s\" | Box: %ux%u | Lines: %u\n", text.c_str(),

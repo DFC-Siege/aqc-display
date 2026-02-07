@@ -34,8 +34,7 @@ void SCD40::start_measurement() {
                 next_measurement_time = make_timeout_time_ms(1000);
                 return;
         }
-
-        sleep_ms(1000);
+        next_measurement_time = make_timeout_time_ms(1000);
 }
 
 void SCD40::process() {

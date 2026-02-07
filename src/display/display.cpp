@@ -68,14 +68,17 @@ void Display::set_cursor(uint16_t x, uint16_t y) {
 
 void Display::set_font(FontType type) {
         font = FontFactory::create(type);
+        tft.setFont(font.font_name);
 }
 
 void Display::set_foreground(Color color) {
         foreground = color;
+        tft.setTextColor(foreground, background);
 }
 
 void Display::set_background(Color color) {
         background = color;
+        tft.setTextColor(foreground, background);
 }
 
 Config Display::get_config() const {
