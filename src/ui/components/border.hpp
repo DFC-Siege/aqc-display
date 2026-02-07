@@ -7,16 +7,16 @@
 
 namespace UI {
 struct Border {
-        uint8_t size;
+        uint16_t size;
         Rect rect;
-        uint8_t rounding;
+        uint16_t rounding;
         Color color;
 
-        Rect get_inner_rect() {
+        Rect get_inner_rect() const {
                 return Rect{static_cast<uint16_t>(rect.x + size),
                             static_cast<uint16_t>(rect.y + size),
-                            static_cast<uint16_t>(rect.width - size),
-                            static_cast<uint16_t>(rect.height - size)};
+                            static_cast<uint16_t>(rect.width - (size * 2)),
+                            static_cast<uint16_t>(rect.height - (size * 2))};
         }
 };
 } // namespace UI

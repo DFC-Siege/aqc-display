@@ -31,9 +31,9 @@ HomePage::HomePage(Display::Display &display,
                     static_cast<uint16_t>(config.get_width() - PADDING),
                     static_cast<uint16_t>(config.get_height() - PADDING)};
         const auto border_rect =
-            Rect{PADDING - 1, PADDING - 1,
-                 static_cast<uint16_t>(config.get_width() - PADDING + 1),
-                 static_cast<uint16_t>(config.get_height() - PADDING + 1)};
+            Rect{PADDING - 4, PADDING - 4,
+                 static_cast<uint16_t>(config.get_width() - PADDING + 4),
+                 static_cast<uint16_t>(config.get_height() - PADDING + 4)};
         border = Border{1, border_rect, 0, Colors::ERROR};
         setup_positions();
         setup_listeners();

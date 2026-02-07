@@ -15,8 +15,8 @@ Drawable::Drawable(Display::Display &display, const Rect &rect,
 }
 
 void Drawable::clear() {
-        display.clear(position.x, position.y, bounding_box.width,
-                      bounding_box.height);
+        display.clear(rect.x + position.x, rect.y + position.y,
+                      bounding_box.width, bounding_box.height);
 }
 
 void Drawable::set_position(const Position &position) {

@@ -81,7 +81,7 @@ BoundingBox Text::calculate_bounding_box(std::string text) const {
                                  : max_width_observed;
         uint16_t box_height = lines * font.height;
 
-        return {(uint8_t)box_width, (uint8_t)box_height};
+        return {(uint16_t)box_width, (uint16_t)box_height};
 }
 
 std::string Text::wrap_text() const {
