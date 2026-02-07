@@ -1,5 +1,4 @@
 #include "display.h"
-#include "displaylib_16/displaylib_16_Font.hpp"
 #include "displaylib_16/st7789.hpp"
 #include "hardware/spi.h"
 #include <hardware/gpio.h>
@@ -12,15 +11,14 @@ void Display::initialize() {
         gpio_put(TFT_BL, 1);
 
         tft.setupGPIO(TFT_RST, TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI);
-
-        tft.TFTInitScreenSize(0, 0, 135, 240);
-        tft.TFTInitSPIType(24000, spi0);
+        tft.TFTInitScreenSize(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT);
+        tft.TFTInitSPIType(BAUDRATE, spi0);
         tft.TFTST7789Initialize();
-        tft.setRotation(ST7789_TFT::Degrees_270);
-        tft.fillScreen(tft.C_BLACK);
-        tft.setTextColor(text_color, tft.C_BLACK);
+        tft.setRotation(ROTATION);
+        tft.fillScreen(background);
+        tft.setTextColor(text_color, background);
         tft.setCursor(0, 0);
-        tft.setFont(font_default);
+        tft.setFont(DEFAULT_FONT);
         initialized = true;
 }
 

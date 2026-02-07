@@ -34,6 +34,7 @@ class Display {
         static constexpr auto BAUDRATE = 24000;
         static constexpr auto ROTATION = ST7789_TFT::Degrees_270;
         static constexpr auto DEFAULT_FONT = font_default;
+
         ST7789_TFT tft;
         ST7789_TFT::pixel_color565_e background;
         ST7789_TFT::pixel_color565_e text_color;
