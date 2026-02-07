@@ -1,6 +1,9 @@
 #include <cstdint>
 #include <functional>
 #include <hardware/gpio.h>
+#include <pico/platform/common.h>
+#include <pico/stdio.h>
+#include <pico/stdlib.h>
 #include <pico/time.h>
 
 #include "button.hpp"

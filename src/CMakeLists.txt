@@ -1,4 +1,5 @@
 add_subdirectory(display)
+add_subdirectory(input)
 add_subdirectory(ui)
 
 add_executable(${PROJECT_NAME}
@@ -12,6 +13,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 target_link_libraries(${PROJECT_NAME}
     pico_stdlib
     display_lib
+    input_lib
     ui_lib
 )
 

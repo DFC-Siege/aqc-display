@@ -3,6 +3,7 @@
 #include <pico/stdio.h>
 
 #include "display/display.hpp"
+#include "input_manager.hpp"
 #include "presets/default.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
@@ -13,10 +14,12 @@ int main() {
         auto &display = Display::Display::getInstance();
         display.initialize(Presets::Default);
 
-        UI::PageFactory page_factory{display};
+        Input::InputManager input_manager;
+        UI::PageFactory page_factory{display, input_manager};
         UI::UIManager ui_manager{page_factory, display};
 
         while (true) {
+                input_manager.update();
                 ui_manager.update();
                 tight_loop_contents();
         }

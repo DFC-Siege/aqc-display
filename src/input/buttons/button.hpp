@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <functional>
-#include <hardware/gpio.h>
 
 namespace Input {
 class Button {
