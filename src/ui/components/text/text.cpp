@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
 #include <string>
 
 #include "colors.hpp"
@@ -7,6 +8,7 @@
 #include "components/drawable.hpp"
 #include "components/postition.hpp"
 #include "display.hpp"
+#include "displaylib_16/st7789.hpp"
 #include "font/font_factory.hpp"
 #include "font/font_types.hpp"
 #include "text.hpp"
@@ -40,14 +42,23 @@ void Text::set_text(const std::string &value) {
 }
 
 BoundingBox Text::calculate_bounding_box() const {
-        const uint32_t screen_width = display.get_config().width;
+        const auto &config = display.get_config();
+        bool rotated = config.rotation == ST7789_TFT::Degrees_270 ||
+                       ST7789_TFT::Degrees_90;
+        const uint32_t screen_width = rotated ? config.height : config.width;
         const uint32_t total_width = (uint32_t)font.width * text.size();
+
         uint16_t box_width =
             (total_width > screen_width) ? screen_width : total_width;
         uint32_t lines = (total_width + screen_width - 1) / screen_width;
+
         if (lines == 0 && !text.empty())
                 lines = 1;
+
         uint16_t box_height = lines * font.height;
+
+        printf("[UI LOG] Text: \"%s\" | Box: %ux%u | Lines: %u\n", text.c_str(),
+               box_width, box_height, lines);
 
         return {(uint8_t)box_width, (uint8_t)box_height};
 }

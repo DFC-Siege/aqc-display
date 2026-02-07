@@ -17,7 +17,6 @@ void core1_entry() {
 
         while (true) {
                 scd_sensor->process();
-                sleep_ms(5000);
         }
 }
 

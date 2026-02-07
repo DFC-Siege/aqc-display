@@ -27,6 +27,7 @@ class SCD40 : public Sensor<SCD40Measurement> {
         static constexpr auto BAUDRATE = 100000;
         static constexpr auto ADDR = 0x62;
         SCD40Measurement last_measurement;
+        absolute_time_t next_measurement_time;
 
         void start_measurement();
         std::string get_error_reason(int error_code);
