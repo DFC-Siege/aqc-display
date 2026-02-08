@@ -14,12 +14,12 @@
 namespace Communication {
 SerialManager::SerialManager() {
         mutex_init(&queue_mutex);
-        uart_init(uart0, BAUDRATE);
+        uart_init(uart1, BAUDRATE);
         gpio_set_function(TX_PIN, GPIO_FUNC_UART);
         gpio_set_function(RX_PIN, GPIO_FUNC_UART);
-        uart_set_hw_flow(uart0, false, false);
-        uart_set_format(uart0, 8, 1, UART_PARITY_NONE);
-        uart_set_fifo_enabled(uart0, true);
+        uart_set_hw_flow(uart1, false, false);
+        uart_set_format(uart1, 8, 1, UART_PARITY_NONE);
+        uart_set_fifo_enabled(uart1, true);
 }
 
 uint32_t
@@ -60,7 +60,7 @@ void SerialManager::update() {
 }
 
 void SerialManager::send(const std::string &value) {
-        uart_write_blocking(uart0,
+        uart_write_blocking(uart1,
                             reinterpret_cast<const uint8_t *>(value.c_str()),
                             value.length());
 }
@@ -68,8 +68,8 @@ void SerialManager::send(const std::string &value) {
 void SerialManager::process() {
         static std::string local_buffer;
 
-        while (uart_is_readable(uart0)) {
-                char c = uart_getc(uart0);
+        while (uart_is_readable(uart1)) {
+                char c = uart_getc(uart1);
                 if (c == '\n') {
                         mutex_enter_blocking(&queue_mutex);
                         to_be_invoked.push(std::move(local_buffer));

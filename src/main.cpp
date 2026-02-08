@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cstdio>
 #include <hardware/gpio.h>
 #include <pico/multicore.h>
 #include <pico/platform/common.h>
