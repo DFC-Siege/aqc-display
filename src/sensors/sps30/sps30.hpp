@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdio>
 #include <pico/error.h>
 #include <pico/types.h>
 #include <string>
@@ -17,6 +18,18 @@ struct SPS30Measurement {
         float pm10_0 = 0.0f;
         float typical_particle_size = 0.0f;
         std::string error;
+
+        std::string to_json() const {
+                char buffer[320];
+                int len = std::snprintf(
+                    buffer, sizeof(buffer),
+                    "{\"type\":\"sps30\",\"pm1_0\":%.2f,\"pm2_5\":%.2f,\"pm4_"
+                    "0\":%.2f,\"pm10_0\":%.2f,\"tps\":%.2f,\"error\":\"%s\"}",
+                    pm1_0, pm2_5, pm4_0, pm10_0, typical_particle_size,
+                    error.c_str());
+
+                return std::string(buffer, len);
+        }
 };
 
 class SPS30 : public Sensor<SPS30Measurement> {

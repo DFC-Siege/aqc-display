@@ -6,6 +6,7 @@
 #include <pico/stdio.h>
 #include <pico/time.h>
 
+#include "communication/communication_manager.hpp"
 #include "communication/serial/serial_manager.hpp"
 #include "display/display.hpp"
 #include "display/presets/default.hpp"
@@ -38,6 +39,8 @@ int main() {
         Input::InputManager input_manager;
         Sensors::SCD40 scd_sensor;
         Sensors::SPS30 sps_sensor;
+        Communication::CommunicationManager communication_manager(
+            serial_manager, scd_sensor, sps_sensor);
 
         UI::PageFactory page_factory{display, input_manager, scd_sensor,
                                      sps_sensor};
