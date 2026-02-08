@@ -27,13 +27,10 @@ HomePage::HomePage(Display::Display &display,
       pm10_text(Text{display, rect, "PM10:"}), scd_sensor(scd_sensor),
       sps_sensor(sps_sensor) {
         const auto &config = display.get_config();
-        rect = Rect{PADDING, PADDING,
-                    static_cast<uint16_t>(config.get_width() - PADDING),
-                    static_cast<uint16_t>(config.get_height() - PADDING)};
-        const auto border_rect =
-            Rect{PADDING - 4, PADDING - 4,
-                 static_cast<uint16_t>(config.get_width() - PADDING + 4),
-                 static_cast<uint16_t>(config.get_height() - PADDING + 4)};
+        const auto screen_rect =
+            Rect(0, 0, config.get_width(), config.get_height());
+        rect = screen_rect.from_padding(PADDING);
+        const auto border_rect = screen_rect.from_padding(PADDING - 4);
         border = Border{2, border_rect, 4, Colors::ERROR};
         setup_positions();
         setup_listeners();

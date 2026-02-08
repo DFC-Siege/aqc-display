@@ -11,19 +11,19 @@
 #include "display.hpp"
 #include "font/font.hpp"
 #include "font/font_factory.hpp"
-#include "font/font_types.hpp"
 #include "text.hpp"
 
 namespace UI {
 Text::Text(Display::Display &display, const Rect &rect)
-    : text(""), font(Display::FontFactory::create(Display::FontType::DEFAULT)),
+    : text(""),
+      font(Display::FontFactory::create(display.get_config().default_font)),
       Drawable(display, rect, Position{}, BoundingBox{}, Colors::BACKGROUND,
                Colors::PRIMARY) {
 }
 
 Text::Text(Display::Display &display, const Rect &rect, std::string text)
     : text(text),
-      font(Display::FontFactory::create(Display::FontType::DEFAULT)),
+      font(Display::FontFactory::create(display.get_config().default_font)),
       Drawable(display, rect, Position{}, BoundingBox{}, Colors::BACKGROUND,
                Colors::PRIMARY) {
 }
