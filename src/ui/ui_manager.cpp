@@ -12,8 +12,8 @@ void UIManager::update() {
 }
 
 void UIManager::change_page(PageType type) {
-        display.clear();
         page = std::move(page_factory.create(type));
+        page->first_draw();
         page->draw();
 }
 } // namespace UI

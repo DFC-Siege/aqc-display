@@ -86,7 +86,8 @@ Config Display::get_config() const {
 }
 
 void Display::draw_rectangle(uint16_t x, uint16_t y, uint16_t width,
-                             uint16_t height, uint16_t color) {
-        tft.drawRectWH(x, y, width, height, color);
+                             uint16_t height, uint16_t rounding,
+                             uint16_t color) {
+        tft.drawRoundRect(x, y, width, height, rounding, color);
 }
 } // namespace Display

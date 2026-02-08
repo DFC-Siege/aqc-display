@@ -1,5 +1,7 @@
-#include "page.hpp"
+#include <cstdint>
+
 #include "components/border.hpp"
+#include "page.hpp"
 
 namespace UI {
 void Page::update() {
@@ -8,12 +10,16 @@ void Page::update() {
 void Page::draw() {
         if (border.has_value()) {
                 const auto &rect = border->rect;
-                const auto &inner_rect = border->get_inner_rect();
-                display.draw_rectangle(rect.x, rect.y, rect.width, rect.height,
-                                       border->color);
-                display.draw_rectangle(inner_rect.x, inner_rect.y,
-                                       inner_rect.width, inner_rect.height,
-                                       border->color);
+                for (auto i = 0; i < border->size; i++) {
+                        int16_t current_rounding = border->rounding - i;
+                        if (current_rounding < 0)
+                                current_rounding = 0;
+
+                        display.draw_rectangle(rect.x + i, rect.y + i,
+                                               rect.width - i * 2,
+                                               rect.height - i * 2,
+                                               current_rounding, border->color);
+                }
         }
 }
 } // namespace UI

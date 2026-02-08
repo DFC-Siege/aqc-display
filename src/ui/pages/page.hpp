@@ -15,6 +15,9 @@ class Page {
         }
         virtual void update();
         virtual void draw();
+        virtual void first_draw() {
+                display.clear();
+        }
         virtual void before_destroy() = 0;
 
       protected:

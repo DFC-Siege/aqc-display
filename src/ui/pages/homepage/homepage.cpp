@@ -34,17 +34,17 @@ HomePage::HomePage(Display::Display &display,
             Rect{PADDING - 4, PADDING - 4,
                  static_cast<uint16_t>(config.get_width() - PADDING + 4),
                  static_cast<uint16_t>(config.get_height() - PADDING + 4)};
-        border = Border{1, border_rect, 0, Colors::ERROR};
+        border = Border{2, border_rect, 4, Colors::ERROR};
         setup_positions();
         setup_listeners();
 
         input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {
-                border->color = border->color == Colors::ERROR ? Colors::WARNING
+                border->color = border->color == Colors::ERROR ? Colors::SUCCESS
                                                                : Colors::ERROR;
                 draw();
         });
         input_manager.set_action(Input::ButtonType::BUTTON2, [this]() {
-                border->color = border->color == Colors::ERROR ? Colors::WARNING
+                border->color = border->color == Colors::ERROR ? Colors::SUCCESS
                                                                : Colors::ERROR;
                 draw();
         });
