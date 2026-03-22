@@ -7,25 +7,23 @@
 #include <pico/time.h>
 
 #include "communication/communication_manager.hpp"
-#include "communication/serial/serial_manager.hpp"
 #include "display/display.hpp"
 #include "display/presets/default.hpp"
 #include "input_manager.hpp"
 #include "sensors/scd40/scd40.hpp"
 #include "sensors/sps30/sps30.hpp"
+#include "serial_hal.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 
 void core1_entry() {
         auto *scd_sensor = (Sensors::SCD40 *)multicore_fifo_pop_blocking();
         auto *sps_sensor = (Sensors::SPS30 *)multicore_fifo_pop_blocking();
-        auto *serial_manager =
-            (Communication::SerialManager *)multicore_fifo_pop_blocking();
-
+        auto *serial_hal = (serial::SerialHal *)multicore_fifo_pop_blocking();
         while (true) {
                 scd_sensor->process();
                 sps_sensor->process();
-                serial_manager->process();
+                serial_hal->loop();
         }
 }
 
@@ -35,12 +33,13 @@ int main() {
         auto &display = Display::Display::getInstance();
         display.initialize(Presets::Default);
 
-        Communication::SerialManager serial_manager;
+        serial::SerialHal serial_hal;
         Input::InputManager input_manager;
         Sensors::SCD40 scd_sensor;
         Sensors::SPS30 sps_sensor;
+
         Communication::CommunicationManager communication_manager(
-            serial_manager, scd_sensor, sps_sensor);
+            serial_hal, scd_sensor, sps_sensor);
 
         UI::PageFactory page_factory{display, input_manager, scd_sensor,
                                      sps_sensor};
@@ -49,12 +48,11 @@ int main() {
         multicore_launch_core1(core1_entry);
         multicore_fifo_push_blocking((uint32_t)&scd_sensor);
         multicore_fifo_push_blocking((uint32_t)&sps_sensor);
-        multicore_fifo_push_blocking((uint32_t)&serial_manager);
+        multicore_fifo_push_blocking((uint32_t)&serial_hal);
 
         while (true) {
                 scd_sensor.update();
                 sps_sensor.update();
-                serial_manager.update();
                 input_manager.update();
                 ui_manager.update();
                 tight_loop_contents();

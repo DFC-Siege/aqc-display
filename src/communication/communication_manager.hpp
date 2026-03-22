@@ -1,18 +1,18 @@
 #pragma once
 
 #include "scd40/scd40.hpp"
-#include "serial/serial_manager.hpp"
+#include "serial_hal.hpp"
 #include "sps30/sps30.hpp"
 
 namespace Communication {
 class CommunicationManager {
       public:
-        CommunicationManager(SerialManager &serial_manager,
+        CommunicationManager(serial::SerialHal &serial_hal,
                              Sensors::SCD40 &scd_sensor,
                              Sensors::SPS30 &sps_sensor);
 
       private:
-        SerialManager &serial_manager;
+        serial::SerialHal &serial_hal;
         Sensors::SCD40 &scd_sensor;
         Sensors::SPS30 &sps_sensor;
 };

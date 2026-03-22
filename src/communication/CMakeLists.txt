@@ -1,5 +1,4 @@
 add_library(communication_lib STATIC 
-        serial/serial_manager.cpp
         communication_manager.cpp
 )
 
@@ -11,4 +10,5 @@ target_link_libraries(communication_lib
         hardware_gpio
         hardware_uart
         sensors_lib
+        rp2040_serial_hal
 )
