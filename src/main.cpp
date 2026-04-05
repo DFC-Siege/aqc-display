@@ -98,8 +98,8 @@ int main() {
         static constexpr uint16_t MTU = 255;
         static constexpr uint16_t MAX_TRIES = 1;
         static constexpr auto BAUDRATE = 115200;
-        static constexpr auto TX_PIN = 8;
-        static constexpr auto RX_PIN = 9;
+        static constexpr auto TX_PIN = 9;
+        static constexpr auto RX_PIN = 8;
         serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
         transport::SerialTransporter serial_transporter(serial_hal, MTU);
         transport::Multiplexer<transport::SerialTransporter, PicoMutex>
