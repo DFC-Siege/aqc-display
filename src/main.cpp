@@ -82,7 +82,9 @@ void core1_entry() {
 int main() {
         stdio_init_all();
 
-        logging::Logger::set(std::make_unique<logging::ConsoleLogger>());
+        auto logger = std::make_unique<logging::ConsoleLogger>();
+        logger->set_level(logging::LogLevel::Info);
+        logging::Logger::set(std::move(logger));
 
         auto &display = Display::Display::getInstance();
         display.initialize(Presets::Default);
@@ -95,7 +97,7 @@ int main() {
                                      sps_sensor};
         UI::UIManager ui_manager{page_factory, display};
 
-        static constexpr uint16_t MTU = 255;
+        static constexpr uint16_t MTU = 17;
         static constexpr uint16_t MAX_TRIES = 1;
         static constexpr auto BAUDRATE = 115200;
         static constexpr auto TX_PIN = 9;
@@ -132,7 +134,7 @@ int main() {
                 data.error = value.error;
                 logging::logger().println("sending");
                 const auto result = dispatcher.send(
-                    Channel::Direct, Command::SCD, data.serialize());
+                    Channel::Chunked, Command::SCD, data.serialize());
                 if (result.failed()) {
                         logging::logger().println(logging::LogLevel::Error, TAG,
                                                   result.error());
