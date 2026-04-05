@@ -10,8 +10,6 @@ include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 project(${PROJECT_NAME} C CXX ASM)
 pico_sdk_init()
 
-add_compile_definitions(PICO_MUTEX_ENABLE_STD_MUTEX=1)
-
 add_compile_options(-Wno-psabi -Wno-free-nonheap-object)
 set(PONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../pons)
 

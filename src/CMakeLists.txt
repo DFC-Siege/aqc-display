@@ -7,17 +7,12 @@ add_executable(${PROJECT_NAME}
         main.cpp
 )
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE 
-        PICO_MUTEX_ENABLE_STD_MUTEX=1
-)
-
 target_include_directories(${PROJECT_NAME} PRIVATE 
         ${CMAKE_CURRENT_SOURCE_DIR}/../include
 )
 
 target_link_libraries(${PROJECT_NAME}
         pico_stdlib
-        pico_standard_link 
         pico_multicore
         display_lib
         input_lib
