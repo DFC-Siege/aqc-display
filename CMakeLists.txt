@@ -17,6 +17,8 @@ add_subdirectory(${PONS_DIR}/core/result                                    ${CM
 add_subdirectory(${PONS_DIR}/core/logger                                    ${CMAKE_BINARY_DIR}/pons/logger)
 add_subdirectory(${PONS_DIR}/core/logger/console_logger                     ${CMAKE_BINARY_DIR}/pons/logger/console_logger)
 add_subdirectory(${PONS_DIR}/core/serializer                                ${CMAKE_BINARY_DIR}/pons/serializer)
+add_subdirectory(${PONS_DIR}/core/mutex                                     ${CMAKE_BINARY_DIR}/pons/mutex)
+add_subdirectory(${PONS_DIR}/platform                                       ${CMAKE_BINARY_DIR}/pons/platform)
 add_subdirectory(${PONS_DIR}/hal/serial_hal                                 ${CMAKE_BINARY_DIR}/pons/serial_hal)
 add_subdirectory(${PONS_DIR}/hal/store                                      ${CMAKE_BINARY_DIR}/pons/store)
 add_subdirectory(${PONS_DIR}/hal/rp2040/rp2040_serial_hal                   ${CMAKE_BINARY_DIR}/pons/rp2040_serial_hal)

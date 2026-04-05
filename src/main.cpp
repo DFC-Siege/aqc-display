@@ -20,6 +20,7 @@
 #include "input_manager.hpp"
 #include "logger.hpp"
 #include "multiplexer.hpp"
+#include "platform_mutex.hpp"
 #include "result.hpp"
 #include "sensors/scd40/scd40.hpp"
 #include "sensors/sps30/sps30.hpp"
@@ -98,11 +99,13 @@ int main() {
         static constexpr auto RX_PIN = 9;
         serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
         transport::SerialTransporter serial_transporter(serial_hal, MTU);
-        transport::Multiplexer multiplexer(serial_transporter);
+        transport::Multiplexer<transport::SerialTransporter, PicoMutex>
+            multiplexer(serial_transporter);
 
-        using MuxChannel =
-            transport::Multiplexer<transport::SerialTransporter>::InnerChannel;
-        using ChunkedMuxChannel = transport::ChunkedTransporter<MuxChannel>;
+        using MuxChannel = transport::Multiplexer<transport::SerialTransporter,
+                                                  PicoMutex>::InnerChannel;
+        using ChunkedMuxChannel =
+            transport::ChunkedTransporter<MuxChannel, PicoMutex>;
         using DirectMuxChannel = transport::DirectTransporter<MuxChannel>;
 
         auto &inner_chunked_channel =
@@ -114,7 +117,7 @@ int main() {
             multiplexer.create_inner_channel(Channel::Direct);
         auto direct = std::make_unique<DirectMuxChannel>(inner_direct_channel);
 
-        transport::Dispatcher<transport::BaseTransporter> dispatcher;
+        transport::Dispatcher<transport::BaseTransporter, PicoMutex> dispatcher;
         dispatcher.register_transporter(Channel::Chunked, std::move(chunked));
         dispatcher.register_transporter(Channel::Direct, std::move(direct));
 
