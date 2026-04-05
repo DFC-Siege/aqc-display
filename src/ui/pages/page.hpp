@@ -13,6 +13,7 @@ class Page {
         Page(Display::Display &display, Input::InputManager &input_manager)
             : display(display), input_manager(input_manager) {
         }
+        virtual ~Page() = default;
         virtual void update();
         virtual void draw();
         virtual void first_draw() {
