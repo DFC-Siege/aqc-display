@@ -130,8 +130,9 @@ int main() {
                 data.humidity = value.humidity;
                 data.temperature = value.temperature;
                 data.error = value.error;
+                logging::logger().println("sending");
                 const auto result = dispatcher.send(
-                    Channel::Chunked, Command::SCD, data.serialize());
+                    Channel::Direct, Command::SCD, data.serialize());
                 if (result.failed()) {
                         logging::logger().println(logging::LogLevel::Error, TAG,
                                                   result.error());
