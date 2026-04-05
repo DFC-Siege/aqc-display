@@ -17,6 +17,7 @@
 #include "dispatcher.hpp"
 #include "display/display.hpp"
 #include "display/presets/default.hpp"
+#include "i_logger.hpp"
 #include "input_manager.hpp"
 #include "logger.hpp"
 #include "multiplexer.hpp"
@@ -29,6 +30,8 @@
 #include "serializer.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
+
+static constexpr auto TAG = "main";
 
 enum Channel : transport::TransporterId {
         Chunked,
@@ -120,6 +123,20 @@ int main() {
         transport::Dispatcher<transport::BaseTransporter, PicoMutex> dispatcher;
         dispatcher.register_transporter(Channel::Chunked, std::move(chunked));
         dispatcher.register_transporter(Channel::Direct, std::move(direct));
+
+        scd_sensor.add_listener([&dispatcher](const auto &value) {
+                SCDData data;
+                data.co2 = value.co2;
+                data.humidity = value.humidity;
+                data.temperature = value.temperature;
+                data.error = value.error;
+                const auto result = dispatcher.send(
+                    Channel::Chunked, Command::SCD, data.serialize());
+                if (result.failed()) {
+                        logging::logger().println(logging::LogLevel::Error, TAG,
+                                                  result.error());
+                }
+        });
 
         multicore_launch_core1(core1_entry);
         multicore_fifo_push_blocking((uint32_t)&scd_sensor);
