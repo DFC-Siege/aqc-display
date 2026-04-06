@@ -99,7 +99,7 @@ int main() {
         UI::UIManager ui_manager{page_factory, display};
 
         static constexpr auto MTU = 17;
-        static constexpr auto MAX_TRIES = 1;
+        static constexpr auto MAX_TRIES = 3;
         static constexpr auto TIMEOUT = std::chrono::milliseconds(1000);
         static constexpr auto BAUDRATE = 115200;
         static constexpr auto TX_PIN = 9;
