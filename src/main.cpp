@@ -1,3 +1,4 @@
+#include <chrono>
 #include <cstdint>
 #include <cstdio>
 #include <hardware/gpio.h>
@@ -97,9 +98,9 @@ int main() {
                                      sps_sensor};
         UI::UIManager ui_manager{page_factory, display};
 
-        static constexpr uint16_t MTU = 17;
-        static constexpr uint16_t MAX_TRIES = 1;
-        static constexpr uint16_t TIMEOUT = 1000;
+        static constexpr auto MTU = 17;
+        static constexpr auto MAX_TRIES = 1;
+        static constexpr auto TIMEOUT = std::chrono::milliseconds(1000);
         static constexpr auto BAUDRATE = 115200;
         static constexpr auto TX_PIN = 9;
         static constexpr auto RX_PIN = 8;
