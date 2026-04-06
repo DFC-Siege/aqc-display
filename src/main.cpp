@@ -99,6 +99,7 @@ int main() {
 
         static constexpr uint16_t MTU = 17;
         static constexpr uint16_t MAX_TRIES = 1;
+        static constexpr uint16_t TIMEOUT = 1000;
         static constexpr auto BAUDRATE = 115200;
         static constexpr auto TX_PIN = 9;
         static constexpr auto RX_PIN = 8;
@@ -116,7 +117,7 @@ int main() {
         auto &inner_chunked_channel =
             multiplexer.create_inner_channel(Channel::Chunked);
         auto chunked = std::make_unique<ChunkedMuxChannel>(
-            inner_chunked_channel, MAX_TRIES);
+            inner_chunked_channel, MAX_TRIES, TIMEOUT);
 
         auto &inner_direct_channel =
             multiplexer.create_inner_channel(Channel::Direct);
