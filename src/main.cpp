@@ -85,7 +85,7 @@ int main() {
 
         auto logger = std::make_unique<logging::ConsoleLogger>();
         logger->set_level(logging::LogLevel::Info);
-        logging::Logger::set(std::move(logger));
+        logging::Logger<PicoMutex>::set(std::move(logger));
 
         auto &display = Display::Display::getInstance();
         display.initialize(Presets::Default);
@@ -107,7 +107,7 @@ int main() {
         serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
         transport::SerialTransporter serial_transporter(serial_hal, MTU);
         transport::Multiplexer<transport::SerialTransporter, PicoMutex>
-            multiplexer(serial_transporter);
+            multiplexer(std::move(serial_transporter));
 
         using MuxChannel = transport::Multiplexer<transport::SerialTransporter,
                                                   PicoMutex>::InnerChannel;
@@ -118,11 +118,12 @@ int main() {
         auto &inner_chunked_channel =
             multiplexer.create_inner_channel(Channel::Chunked);
         auto chunked = std::make_unique<ChunkedMuxChannel>(
-            inner_chunked_channel, MAX_TRIES, TIMEOUT);
+            std::move(inner_chunked_channel), MAX_TRIES, TIMEOUT);
 
         auto &inner_direct_channel =
             multiplexer.create_inner_channel(Channel::Direct);
-        auto direct = std::make_unique<DirectMuxChannel>(inner_direct_channel);
+        auto direct =
+            std::make_unique<DirectMuxChannel>(std::move(inner_direct_channel));
 
         transport::Dispatcher<transport::BaseTransporter, PicoMutex> dispatcher;
         dispatcher.register_transporter(Channel::Chunked, std::move(chunked));

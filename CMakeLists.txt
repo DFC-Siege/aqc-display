@@ -10,8 +10,10 @@ include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
 project(${PROJECT_NAME} C CXX ASM)
 pico_sdk_init()
 
+set(PLATFORM "rp2040" CACHE STRING "Target platform")
+add_compile_definitions(PICO_BUILD)
 add_compile_options(-Wno-psabi -Wno-free-nonheap-object)
-set(PONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../pons)
+set(PONS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../pons)
 
 add_subdirectory(${PONS_DIR}/core/result                                    ${CMAKE_BINARY_DIR}/pons/result)
 add_subdirectory(${PONS_DIR}/core/logger                                    ${CMAKE_BINARY_DIR}/pons/logger)
