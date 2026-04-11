@@ -22,7 +22,6 @@
 #include "input_manager.hpp"
 #include "logger.hpp"
 #include "multiplexer.hpp"
-#include "platform_mutex.hpp"
 #include "requester.hpp"
 #include "result.hpp"
 #include "sensors/scd40/scd40.hpp"
@@ -42,6 +41,7 @@ enum Channel : transport::TransporterId {
 
 enum Command : transport::CommandId {
         SCD,
+        SCDRequest,
 };
 
 struct SCDData {
@@ -150,6 +150,11 @@ int main() {
         multicore_fifo_push_blocking((uint32_t)&scd_sensor);
         multicore_fifo_push_blocking((uint32_t)&sps_sensor);
         multicore_fifo_push_blocking((uint32_t)&serial_hal);
+        requester.register_requestable<serializer::Empty, SCDData>(
+            Command::SCDRequest, Command::SCDRequest, Channel::Chunked,
+            [](serializer::Empty empty) -> result::Result<SCDData> {
+                    return result::ok(SCDData{});
+            });
 
         while (true) {
                 scd_sensor.update();
