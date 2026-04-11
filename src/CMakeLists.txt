@@ -27,6 +27,7 @@ target_link_libraries(${PROJECT_NAME}
         dispatcher
         console_logger
         serializer
+        requester
 )
 
 pico_add_extra_outputs(${PROJECT_NAME})

@@ -23,6 +23,7 @@
 #include "logger.hpp"
 #include "multiplexer.hpp"
 #include "platform_mutex.hpp"
+#include "requester.hpp"
 #include "result.hpp"
 #include "sensors/scd40/scd40.hpp"
 #include "sensors/sps30/sps30.hpp"
@@ -85,7 +86,7 @@ int main() {
 
         auto logger = std::make_unique<logging::ConsoleLogger>();
         logger->set_level(logging::LogLevel::Info);
-        logging::Logger<PicoMutex>::set(std::move(logger));
+        logging::set_logger(std::move(logger));
 
         auto &display = Display::Display::getInstance();
         display.initialize(Presets::Default);
@@ -106,13 +107,12 @@ int main() {
         static constexpr auto RX_PIN = 8;
         serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
         transport::SerialTransporter serial_transporter(serial_hal, MTU);
-        transport::Multiplexer<transport::SerialTransporter, PicoMutex>
-            multiplexer(std::move(serial_transporter));
+        transport::Multiplexer<transport::SerialTransporter> multiplexer(
+            std::move(serial_transporter));
 
-        using MuxChannel = transport::Multiplexer<transport::SerialTransporter,
-                                                  PicoMutex>::InnerChannel;
-        using ChunkedMuxChannel =
-            transport::ChunkedTransporter<MuxChannel, PicoMutex>;
+        using MuxChannel =
+            transport::Multiplexer<transport::SerialTransporter>::InnerChannel;
+        using ChunkedMuxChannel = transport::ChunkedTransporter<MuxChannel>;
         using DirectMuxChannel = transport::DirectTransporter<MuxChannel>;
 
         auto &inner_chunked_channel =
@@ -125,9 +125,11 @@ int main() {
         auto direct =
             std::make_unique<DirectMuxChannel>(std::move(inner_direct_channel));
 
-        transport::Dispatcher<transport::BaseTransporter, PicoMutex> dispatcher;
+        transport::Dispatcher<transport::BaseTransporter> dispatcher;
         dispatcher.register_transporter(Channel::Chunked, std::move(chunked));
         dispatcher.register_transporter(Channel::Direct, std::move(direct));
+
+        transport::Requester<transport::BaseTransporter> requester(dispatcher);
 
         scd_sensor.add_listener([&dispatcher](const auto &value) {
                 SCDData data;
