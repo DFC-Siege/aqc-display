@@ -3,6 +3,7 @@
 #include <hardware/i2c.h>
 #include <hardware/structs/io_bank0.h>
 #include <pico/error.h>
+#include <pico/types.h>
 #include <string>
 
 #include "hardware/gpio.h"
@@ -10,13 +11,15 @@
 #include "scd40_sensor.hpp"
 
 namespace sensors {
-SCD40Sensor::SCD40Sensor() {
+SCD40Sensor::SCD40Sensor(i2c_inst_t *port, uint sda, uint scl, uint baudrate,
+                         uint address)
+    : port(port), sda(sda), scl(scl), baudrate(baudrate), address(address) {
         sleep_ms(1000);
-        i2c_init(I2C_PORT, BAUDRATE);
-        gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
-        gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
-        gpio_pull_up(SDA_PIN);
-        gpio_pull_up(SCL_PIN);
+        i2c_init(port, baudrate);
+        gpio_set_function(sda, GPIO_FUNC_I2C);
+        gpio_set_function(scl, GPIO_FUNC_I2C);
+        gpio_pull_up(sda);
+        gpio_pull_up(scl);
 
         start_measurement();
 }
@@ -24,7 +27,7 @@ SCD40Sensor::SCD40Sensor() {
 void SCD40Sensor::start_measurement() {
         printf("starting measurement \n");
         uint8_t cmd[] = {0x21, 0xb1};
-        int result = i2c_write_blocking(I2C_PORT, ADDR, cmd, 2, false);
+        int result = i2c_write_blocking(port, address, cmd, 2, false);
         if (result < 0) {
                 last_measurement.error = get_error_reason(result);
                 printf("SCD40Sensor intitial write error: %s\n",
@@ -44,7 +47,7 @@ void SCD40Sensor::process() {
         uint8_t read_cmd[] = {0xec, 0x05};
         uint8_t data[9];
 
-        int result = i2c_write_blocking(I2C_PORT, ADDR, read_cmd, 2, false);
+        int result = i2c_write_blocking(port, address, read_cmd, 2, false);
         if (result < 0) {
                 last_measurement.error = get_error_reason(result);
                 printf("SCD40Sensor write error: %s\n",
@@ -56,7 +59,7 @@ void SCD40Sensor::process() {
 
         sleep_ms(5);
 
-        result = i2c_read_blocking(I2C_PORT, ADDR, data, 9, false);
+        result = i2c_read_blocking(port, address, data, 9, false);
         if (result < 0) {
                 last_measurement.error = get_error_reason(result);
                 printf("SCD40Sensor read error: %s\n",

@@ -55,7 +55,14 @@ int main() {
         display.initialize(Presets::Default);
 
         input::InputManager input_manager;
-        sensors::SCD40Sensor scd_sensor;
+
+        static constexpr auto SCD_I2C_PORT = i2c1;
+        static constexpr auto SCD_SDA_PIN = 14;
+        static constexpr auto SCD_SCL_PIN = 15;
+        static constexpr auto SCD_BAUDRATE = 100000;
+        static constexpr auto SCD_ADDRESS = 0x62;
+        sensors::SCD40Sensor scd_sensor{SCD_I2C_PORT, SCD_SDA_PIN, SCD_SCL_PIN,
+                                        SCD_BAUDRATE, SCD_ADDRESS};
 
         static constexpr auto SPS_I2C_PORT = i2c0;
         static constexpr auto SPS_SDA_PIN = 24;

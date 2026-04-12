@@ -9,17 +9,18 @@
 namespace sensors {
 class SCD40Sensor : public Sensor<models::SCD40> {
       public:
-        SCD40Sensor();
+        SCD40Sensor(i2c_inst_t *port, uint sda, uint scl, uint baudrate,
+                    uint address);
         void process() override;
 
       private:
-        static constexpr auto I2C_PORT = i2c1;
-        static constexpr auto SDA_PIN = 14;
-        static constexpr auto SCL_PIN = 15;
-        static constexpr auto BAUDRATE = 100000;
-        static constexpr auto ADDR = 0x62;
         models::SCD40 last_measurement;
         absolute_time_t next_measurement_time;
+        i2c_inst_t *port;
+        uint sda;
+        uint scl;
+        uint baudrate;
+        uint address;
 
         void start_measurement();
 };
