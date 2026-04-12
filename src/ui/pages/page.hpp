@@ -7,10 +7,10 @@
 #include "display.hpp"
 #include "input_manager.hpp"
 
-namespace UI {
+namespace ui {
 class Page {
       public:
-        Page(Display::Display &display, Input::InputManager &input_manager)
+        Page(display::Display &display, input::InputManager &input_manager)
             : display(display), input_manager(input_manager) {
         }
         virtual ~Page() = default;
@@ -22,9 +22,9 @@ class Page {
         virtual void before_destroy() = 0;
 
       protected:
-        Display::Display &display;
-        Input::InputManager &input_manager;
+        display::Display &display;
+        input::InputManager &input_manager;
         Rect rect;
         std::optional<Border> border;
 };
-} // namespace UI
+} // namespace ui

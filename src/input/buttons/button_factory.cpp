@@ -6,7 +6,7 @@
 #include "button.hpp"
 #include "button_factory.hpp"
 
-namespace Input {
+namespace input {
 std::map<ButtonType, uint8_t> ButtonFactory::pins = {{ButtonType::BUTTON1, 6},
                                                      {ButtonType::BUTTON2, 7}};
 
@@ -21,4 +21,4 @@ std::unique_ptr<Button> ButtonFactory::create(ButtonType type,
         return std::make_unique<Button>(pins[type], on_press, on_hold);
 }
 
-} // namespace Input
+} // namespace input

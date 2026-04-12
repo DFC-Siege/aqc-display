@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Display {
+namespace display {
 enum FontType {
         DEFAULT,
         PICO,

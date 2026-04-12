@@ -6,10 +6,10 @@
 #include "display.hpp"
 #include "types.hpp"
 
-namespace UI {
+namespace ui {
 class Drawable {
       public:
-        Drawable(Display::Display &display, const Rect &rect, Position position,
+        Drawable(display::Display &display, const Rect &rect, Position position,
                  BoundingBox bounding_box, Color background, Color foreground);
         virtual void draw() = 0;
 
@@ -19,7 +19,7 @@ class Drawable {
         void set_foreground(Color color);
 
       protected:
-        Display::Display &display;
+        display::Display &display;
         const Rect &rect;
         Position position;
         BoundingBox bounding_box;
@@ -27,4 +27,4 @@ class Drawable {
         Color foreground;
         void set_bounding_box(const BoundingBox &bounding_box);
 };
-} // namespace UI
+} // namespace ui

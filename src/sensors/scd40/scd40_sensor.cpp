@@ -9,7 +9,7 @@
 #include "pico/time.h"
 #include "scd40_sensor.hpp"
 
-namespace Sensors {
+namespace sensors {
 SCD40Sensor::SCD40Sensor() {
         sleep_ms(1000);
         i2c_init(I2C_PORT, BAUDRATE);
@@ -80,4 +80,4 @@ void SCD40Sensor::process() {
         next_measurement_time = make_timeout_time_ms(5000);
         invoke_listeners(last_measurement);
 }
-} // namespace Sensors
+} // namespace sensors

@@ -10,12 +10,12 @@
 #include "sps30/sps30_sensor.hpp"
 #include <cstdint>
 
-namespace UI {
+namespace ui {
 class HomePage : public Page {
       public:
-        HomePage(Display::Display &display, Input::InputManager &input_manager,
-                 Sensors::SCD40Sensor &scd_sensor,
-                 Sensors::SPS30Sensor &sps_sensor);
+        HomePage(display::Display &display, input::InputManager &input_manager,
+                 sensors::SCD40Sensor &scd_sensor,
+                 sensors::SPS30Sensor &sps_sensor);
         void draw() override;
         void before_destroy() override;
 
@@ -28,8 +28,8 @@ class HomePage : public Page {
         Text pm2_text;
         Text pm4_text;
         Text pm10_text;
-        Sensors::SCD40Sensor &scd_sensor;
-        Sensors::SPS30Sensor &sps_sensor;
+        sensors::SCD40Sensor &scd_sensor;
+        sensors::SPS30Sensor &sps_sensor;
         uint32_t scd_listener_id;
         uint32_t sps_listener_id;
 
@@ -38,4 +38,4 @@ class HomePage : public Page {
         void update_scd_metrics(const models::SCD40 &data);
         void update_sps_metrics(const models::SPS30 &data);
 };
-} // namespace UI
+} // namespace ui

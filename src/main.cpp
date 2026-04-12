@@ -8,7 +8,6 @@
 #include <pico/platform/common.h>
 #include <pico/stdio.h>
 #include <pico/time.h>
-#include <string>
 #include <utility>
 
 #include "base_transporter.hpp"
@@ -23,12 +22,10 @@
 #include "logger.hpp"
 #include "multiplexer.hpp"
 #include "requester.hpp"
-#include "result.hpp"
 #include "sensors/scd40/scd40_sensor.hpp"
 #include "sensors/sps30/sps30_sensor.hpp"
 #include "serial_hal.hpp"
 #include "serial_transporter.hpp"
-#include "serializer.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 
@@ -44,37 +41,11 @@ enum Command : transport::CommandId {
         SCDRequest,
 };
 
-struct SCDData {
-        uint16_t co2 = 0;
-        float temperature = 0.0f;
-        float humidity = 0.0f;
-        std::string error;
-
-        serializer::Data serialize() const {
-                serializer::Writer w;
-                w.write(co2);
-                w.write(temperature);
-                w.write(humidity);
-                w.write(error);
-                return std::move(w.buf);
-        }
-
-        static result::Result<SCDData> deserialize(serializer::DataView buf) {
-                serializer::Reader r{buf};
-                return result::ok(SCDData{
-                    .co2 = TRY(r.read<uint16_t>()),
-                    .temperature = TRY(r.read<float>()),
-                    .humidity = TRY(r.read<float>()),
-                    .error = TRY(r.read_string()),
-                });
-        }
-};
-
 void core1_entry() {
         auto *scd_sensor =
-            (Sensors::SCD40Sensor *)multicore_fifo_pop_blocking();
+            (sensors::SCD40Sensor *)multicore_fifo_pop_blocking();
         auto *sps_sensor =
-            (Sensors::SPS30Sensor *)multicore_fifo_pop_blocking();
+            (sensors::SPS30Sensor *)multicore_fifo_pop_blocking();
         auto *serial_hal = (serial::SerialHal *)multicore_fifo_pop_blocking();
         while (true) {
                 scd_sensor->process();
@@ -90,16 +61,16 @@ int main() {
         logger->set_level(logging::LogLevel::Info);
         logging::set_logger(std::move(logger));
 
-        auto &display = Display::Display::getInstance();
+        auto &display = display::Display::getInstance();
         display.initialize(Presets::Default);
 
-        Input::InputManager input_manager;
-        Sensors::SCD40Sensor scd_sensor;
-        Sensors::SPS30Sensor sps_sensor;
+        input::InputManager input_manager;
+        sensors::SCD40Sensor scd_sensor;
+        sensors::SPS30Sensor sps_sensor;
 
-        UI::PageFactory page_factory{display, input_manager, scd_sensor,
+        ui::PageFactory page_factory{display, input_manager, scd_sensor,
                                      sps_sensor};
-        UI::UIManager ui_manager{page_factory, display};
+        ui::UIManager ui_manager{page_factory, display};
 
         static constexpr auto MTU = 17;
         static constexpr auto MAX_TRIES = 3;
@@ -134,13 +105,8 @@ int main() {
 
         transport::Requester<transport::BaseTransporter> requester(dispatcher);
 
-        scd_sensor.add_listener([&dispatcher](const auto &value) {
-                SCDData data;
-                data.co2 = value.co2;
-                data.humidity = value.humidity;
-                data.temperature = value.temperature;
-                data.error = value.error;
-                logging::logger().println("sending");
+        scd_sensor.add_listener([&dispatcher](const auto &data) {
+                logging::logger().println("sending scd40");
                 const auto result = dispatcher.send(
                     Channel::Chunked, Command::SCD, data.serialize());
                 if (result.failed()) {
@@ -153,11 +119,6 @@ int main() {
         multicore_fifo_push_blocking((uint32_t)&scd_sensor);
         multicore_fifo_push_blocking((uint32_t)&sps_sensor);
         multicore_fifo_push_blocking((uint32_t)&serial_hal);
-        requester.register_requestable<serializer::Empty, SCDData>(
-            Command::SCDRequest, Command::SCDRequest, Channel::Chunked,
-            [](serializer::Empty empty) -> result::Result<SCDData> {
-                    return result::ok(SCDData{});
-            });
 
         while (true) {
                 scd_sensor.update();

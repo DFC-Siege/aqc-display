@@ -3,7 +3,7 @@
 #include "components/border.hpp"
 #include "page.hpp"
 
-namespace UI {
+namespace ui {
 void Page::update() {
 }
 
@@ -22,4 +22,4 @@ void Page::draw() {
                 }
         }
 }
-} // namespace UI
+} // namespace ui

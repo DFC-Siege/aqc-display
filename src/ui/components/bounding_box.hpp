@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-namespace UI {
+namespace ui {
 struct BoundingBox {
         uint16_t width;
         uint16_t height;
 };
-} // namespace UI
+} // namespace ui

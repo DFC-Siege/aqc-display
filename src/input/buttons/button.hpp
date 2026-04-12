@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <functional>
 
-namespace Input {
+namespace input {
 class Button {
       public:
         Button(uint8_t pin, std::function<void()> on_press);
@@ -22,4 +22,4 @@ class Button {
         static constexpr auto DEBOUNCE = 50;
         static constexpr auto HOLD_THRESHOLD = 1000;
 };
-} // namespace Input
+} // namespace input

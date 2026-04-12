@@ -1,5 +1,5 @@
 #pragma once
 
-namespace UI {
+namespace ui {
 enum PageType { HOME };
 }

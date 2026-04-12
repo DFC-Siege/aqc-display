@@ -10,13 +10,13 @@
 #include "hardware/spi.h"
 
 namespace {
-void initialize_gpio(const Display::Config &config) {
+void initialize_gpio(const display::Config &config) {
         gpio_init(config.pin_bl);
         gpio_set_dir(config.pin_bl, GPIO_OUT);
         gpio_put(config.pin_bl, 1);
 }
 
-void initialize_tft(ST7789_TFT &tft, const Display::Config &config) {
+void initialize_tft(ST7789_TFT &tft, const display::Config &config) {
         tft.setupGPIO(config.pin_rst, config.pin_dc, config.pin_cs,
                       config.pin_sclk, config.pin_mosi);
         tft.TFTInitScreenSize(config.offset_x, config.offset_y, config.width,
@@ -26,7 +26,7 @@ void initialize_tft(ST7789_TFT &tft, const Display::Config &config) {
 }
 } // namespace
 
-namespace Display {
+namespace display {
 void Display::initialize(const Config &config) {
         initialize_gpio(config);
         initialize_tft(tft, config);
@@ -90,4 +90,4 @@ void Display::draw_rectangle(uint16_t x, uint16_t y, uint16_t width,
                              uint16_t color) {
         tft.drawRoundRect(x, y, width, height, rounding, color);
 }
-} // namespace Display
+} // namespace display

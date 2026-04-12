@@ -7,7 +7,7 @@
 #include "buttons/button.hpp"
 #include "buttons/button_factory.hpp"
 
-namespace Input {
+namespace input {
 class InputManager {
       public:
         void clear_all();
@@ -20,4 +20,4 @@ class InputManager {
       private:
         std::map<ButtonType, std::unique_ptr<Button>> buttons;
 };
-} // namespace Input
+} // namespace input

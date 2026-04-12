@@ -3,10 +3,10 @@
 #include "font.hpp"
 #include "font_types.hpp"
 
-namespace Display {
+namespace display {
 
 class FontFactory {
       public:
         static Font create(FontType type);
 };
-} // namespace Display
+} // namespace display

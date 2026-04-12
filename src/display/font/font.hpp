@@ -6,7 +6,7 @@
 #include "displaylib_16/displaylib_16_Font.hpp"
 #include "font_types.hpp"
 
-namespace Display {
+namespace display {
 struct Font {
         FontType type;
         display_Font_name_e font_name;
@@ -17,4 +17,4 @@ struct Font {
                 return std::make_pair(width, height);
         }
 };
-} // namespace Display
+} // namespace display

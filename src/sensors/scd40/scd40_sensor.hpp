@@ -6,7 +6,7 @@
 #include "scd40.hpp"
 #include "sensor.hpp"
 
-namespace Sensors {
+namespace sensors {
 class SCD40Sensor : public Sensor<models::SCD40> {
       public:
         SCD40Sensor();
@@ -23,4 +23,4 @@ class SCD40Sensor : public Sensor<models::SCD40> {
 
         void start_measurement();
 };
-} // namespace Sensors
+} // namespace sensors

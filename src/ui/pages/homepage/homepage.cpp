@@ -14,12 +14,12 @@
 #include <cstdint>
 #include <format>
 
-namespace UI {
+namespace ui {
 
-HomePage::HomePage(Display::Display &display,
-                   Input::InputManager &input_manager,
-                   Sensors::SCD40Sensor &scd_sensor,
-                   Sensors::SPS30Sensor &sps_sensor)
+HomePage::HomePage(display::Display &display,
+                   input::InputManager &input_manager,
+                   sensors::SCD40Sensor &scd_sensor,
+                   sensors::SPS30Sensor &sps_sensor)
     : Page(display, input_manager),
       temperature_text(Text{display, rect, "Temperature:"}),
       co2_text(Text{display, rect, "CO2:"}),
@@ -38,12 +38,12 @@ HomePage::HomePage(Display::Display &display,
         setup_positions();
         setup_listeners();
 
-        input_manager.set_action(Input::ButtonType::BUTTON1, [this]() {
+        input_manager.set_action(input::ButtonType::BUTTON1, [this]() {
                 border->color = border->color == Colors::ERROR ? Colors::SUCCESS
                                                                : Colors::ERROR;
                 draw();
         });
-        input_manager.set_action(Input::ButtonType::BUTTON2, [this]() {
+        input_manager.set_action(input::ButtonType::BUTTON2, [this]() {
                 border->color = border->color == Colors::ERROR ? Colors::SUCCESS
                                                                : Colors::ERROR;
                 draw();
@@ -142,4 +142,4 @@ void HomePage::before_destroy() {
         sps_sensor.remove_listener(sps_listener_id);
 }
 
-} // namespace UI
+} // namespace ui

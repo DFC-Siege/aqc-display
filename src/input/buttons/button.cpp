@@ -9,7 +9,7 @@
 
 #include "button.hpp"
 
-namespace Input {
+namespace input {
 
 Button::Button(uint8_t pin, std::function<void()> on_press)
     : pin(pin), on_press(on_press) {
@@ -69,4 +69,4 @@ void Button::update() {
                 return;
         }
 }
-} // namespace Input
+} // namespace input

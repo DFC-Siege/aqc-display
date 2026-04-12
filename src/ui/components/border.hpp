@@ -5,7 +5,7 @@
 #include "colors.hpp"
 #include "components/rect.hpp"
 
-namespace UI {
+namespace ui {
 struct Border {
         uint16_t size;
         Rect rect;
@@ -19,4 +19,4 @@ struct Border {
                             static_cast<uint16_t>(rect.height - (size * 2))};
         }
 };
-} // namespace UI
+} // namespace ui

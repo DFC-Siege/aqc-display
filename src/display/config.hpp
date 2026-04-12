@@ -6,7 +6,7 @@
 #include <displaylib_16/st7789.hpp>
 #include <hardware/spi.h>
 
-namespace Display {
+namespace display {
 struct Config {
         uint8_t pin_mosi;
         uint8_t pin_sclk;
@@ -38,4 +38,4 @@ struct Config {
                 return is_rotated() ? width : height;
         }
 };
-} // namespace Display
+} // namespace display

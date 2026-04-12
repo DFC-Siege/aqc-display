@@ -2,6 +2,6 @@
 
 #include <cstdint>
 
-namespace UI {
+namespace ui {
 using Color = uint16_t;
 }

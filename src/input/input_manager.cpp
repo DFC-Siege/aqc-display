@@ -4,7 +4,7 @@
 #include "buttons/button_factory.hpp"
 #include "input_manager.hpp"
 
-namespace Input {
+namespace input {
 void InputManager::set_action(ButtonType type, std::function<void()> on_press) {
         buttons[type] = std::move(ButtonFactory::create(type, on_press));
 }
@@ -28,4 +28,4 @@ void InputManager::update() {
                 button->update();
         }
 }
-} // namespace Input
+} // namespace input

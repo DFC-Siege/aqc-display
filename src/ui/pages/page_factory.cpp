@@ -8,11 +8,11 @@
 #include "scd40/scd40_sensor.hpp"
 #include "sps30/sps30_sensor.hpp"
 
-namespace UI {
-PageFactory::PageFactory(Display::Display &display,
-                         Input::InputManager &input_manager,
-                         Sensors::SCD40Sensor &scd_sensor,
-                         Sensors::SPS30Sensor &sps_sensor)
+namespace ui {
+PageFactory::PageFactory(display::Display &display,
+                         input::InputManager &input_manager,
+                         sensors::SCD40Sensor &scd_sensor,
+                         sensors::SPS30Sensor &sps_sensor)
     : display(display), input_manager(input_manager), scd_sensor(scd_sensor),
       sps_sensor(sps_sensor) {
 }
@@ -26,4 +26,4 @@ std::unique_ptr<Page> PageFactory::create(PageType type) const {
 
         return nullptr;
 }
-} // namespace UI
+} // namespace ui

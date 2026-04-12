@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-namespace UI {
+namespace ui {
 struct Position {
         uint16_t x;
         uint16_t y;
 };
-} // namespace UI
+} // namespace ui

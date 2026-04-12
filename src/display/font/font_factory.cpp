@@ -3,7 +3,7 @@
 #include "font/font.hpp"
 #include "font/font_types.hpp"
 
-namespace Display {
+namespace display {
 Font FontFactory::create(FontType type) {
         switch (type) {
         case FontType::DEFAULT:
@@ -32,4 +32,4 @@ Font FontFactory::create(FontType type) {
 
         return Font{type, display_Font_name_e::font_default};
 }
-} // namespace Display
+} // namespace display

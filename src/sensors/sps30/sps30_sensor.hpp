@@ -6,7 +6,7 @@
 #include "sensor.hpp"
 #include "sps30.hpp"
 
-namespace Sensors {
+namespace sensors {
 class SPS30Sensor : public Sensor<models::SPS30> {
       public:
         SPS30Sensor();
@@ -28,4 +28,4 @@ class SPS30Sensor : public Sensor<models::SPS30> {
         void reset();
         bool is_data_ready();
 };
-} // namespace Sensors
+} // namespace sensors

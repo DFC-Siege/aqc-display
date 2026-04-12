@@ -7,7 +7,7 @@
 
 #include "button.hpp"
 
-namespace Input {
+namespace input {
 enum ButtonType {
         BUTTON1,
         BUTTON2,
@@ -24,4 +24,4 @@ class ButtonFactory {
       private:
         static std::map<ButtonType, uint8_t> pins;
 };
-} // namespace Input
+} // namespace input

@@ -3,7 +3,7 @@
 #include "pages/page_type.hpp"
 #include "ui_manager.hpp"
 
-namespace UI {
+namespace ui {
 void UIManager::update() {
         if (!page)
                 return;
@@ -16,4 +16,4 @@ void UIManager::change_page(PageType type) {
         page->first_draw();
         page->draw();
 }
-} // namespace UI
+} // namespace ui

@@ -5,8 +5,8 @@
 #include "display.hpp"
 #include "types.hpp"
 
-namespace UI {
-Drawable::Drawable(Display::Display &display, const Rect &rect,
+namespace ui {
+Drawable::Drawable(display::Display &display, const Rect &rect,
                    Position position, BoundingBox bounding_box,
                    Color background, Color foreground)
     : display(display), rect(rect), position(position),
@@ -34,4 +34,4 @@ void Drawable::set_background(Color color) {
 void Drawable::set_foreground(Color color) {
         foreground = color;
 }
-} // namespace UI
+} // namespace ui

@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace Sensors {
+namespace sensors {
 template <typename T> struct Listener {
         uint32_t id;
         std::function<void(T)> function;
@@ -115,4 +115,4 @@ template <typename T> class Sensor {
         mutex_t queue_mutex;
         uint32_t last_id = 0;
 };
-} // namespace Sensors
+} // namespace sensors

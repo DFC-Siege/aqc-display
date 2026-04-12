@@ -10,7 +10,7 @@
 #include "font/font.hpp"
 #include "font/font_types.hpp"
 
-namespace Display {
+namespace display {
 class Display {
       public:
         using Color = uint16_t;
@@ -49,4 +49,4 @@ class Display {
 
         bool initialized = false;
 };
-} // namespace Display
+} // namespace display

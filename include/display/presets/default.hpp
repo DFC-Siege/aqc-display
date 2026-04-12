@@ -7,7 +7,7 @@
 #include "font/font_types.hpp"
 
 namespace Presets {
-inline constexpr Display::Config Default = {.pin_mosi = 3,
+inline constexpr display::Config Default = {.pin_mosi = 3,
                                             .pin_sclk = 2,
                                             .pin_cs = 5,
                                             .pin_dc = 1,
@@ -22,5 +22,5 @@ inline constexpr Display::Config Default = {.pin_mosi = 3,
                                             .default_background = 0x0000,
                                             .default_foreground = 0xFFFF,
                                             .default_font =
-                                                Display::FontType::DEFAULT};
+                                                display::FontType::DEFAULT};
 }

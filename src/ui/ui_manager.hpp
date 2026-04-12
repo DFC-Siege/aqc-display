@@ -7,10 +7,10 @@
 #include "pages/page_factory.hpp"
 #include "pages/page_type.hpp"
 
-namespace UI {
+namespace ui {
 class UIManager {
       public:
-        UIManager(const PageFactory &page_factory, Display::Display &display)
+        UIManager(const PageFactory &page_factory, display::Display &display)
             : page_factory(page_factory), display(display) {
                 change_page(PageType::HOME);
         }
@@ -21,7 +21,7 @@ class UIManager {
       private:
         bool initialized = false;
         const PageFactory &page_factory;
-        Display::Display &display;
+        display::Display &display;
         std::unique_ptr<Page> page;
 };
-} // namespace UI
+} // namespace ui

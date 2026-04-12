@@ -13,17 +13,17 @@
 #include "font/font_factory.hpp"
 #include "text.hpp"
 
-namespace UI {
-Text::Text(Display::Display &display, const Rect &rect)
+namespace ui {
+Text::Text(display::Display &display, const Rect &rect)
     : text(""),
-      font(Display::FontFactory::create(display.get_config().default_font)),
+      font(display::FontFactory::create(display.get_config().default_font)),
       Drawable(display, rect, Position{}, BoundingBox{}, Colors::BACKGROUND,
                Colors::PRIMARY) {
 }
 
-Text::Text(Display::Display &display, const Rect &rect, std::string text)
+Text::Text(display::Display &display, const Rect &rect, std::string text)
     : text(text),
-      font(Display::FontFactory::create(display.get_config().default_font)),
+      font(display::FontFactory::create(display.get_config().default_font)),
       Drawable(display, rect, Position{}, BoundingBox{}, Colors::BACKGROUND,
                Colors::PRIMARY) {
 }
@@ -42,7 +42,7 @@ void Text::set_text(const std::string &value) {
         text = value;
 }
 
-Display::Font Text::get_font() const {
+display::Font Text::get_font() const {
         return font;
 }
 
@@ -108,4 +108,4 @@ std::string Text::wrap_text() const {
         }
         return result;
 }
-} // namespace UI
+} // namespace ui

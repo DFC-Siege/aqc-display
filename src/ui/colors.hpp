@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace UI {
+namespace ui {
 using Color = uint16_t;
 
 #define THEME_GRUVBOX_MATERIAL
@@ -31,4 +31,4 @@ static constexpr Color DEBUG = 0xD433;      // #d3869b (color5)
 #error "No UI theme defined!"
 #endif
 } // namespace Colors
-} // namespace UI
+} // namespace ui

@@ -8,20 +8,20 @@
 #include "scd40/scd40_sensor.hpp"
 #include "sps30/sps30_sensor.hpp"
 
-namespace UI {
+namespace ui {
 class Page;
 class PageFactory {
       public:
-        PageFactory(Display::Display &display,
-                    Input::InputManager &input_manager,
-                    Sensors::SCD40Sensor &scd_sensor,
-                    Sensors::SPS30Sensor &sps_sensor);
+        PageFactory(display::Display &display,
+                    input::InputManager &input_manager,
+                    sensors::SCD40Sensor &scd_sensor,
+                    sensors::SPS30Sensor &sps_sensor);
         std::unique_ptr<Page> create(PageType type) const;
 
       private:
-        Display::Display &display;
-        Input::InputManager &input_manager;
-        Sensors::SCD40Sensor &scd_sensor;
-        Sensors::SPS30Sensor &sps_sensor;
+        display::Display &display;
+        input::InputManager &input_manager;
+        sensors::SCD40Sensor &scd_sensor;
+        sensors::SPS30Sensor &sps_sensor;
 };
-} // namespace UI
+} // namespace ui

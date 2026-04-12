@@ -7,7 +7,7 @@
 #include <hardware/i2c.h>
 #include <hardware/structs/io_bank0.h>
 
-namespace Sensors {
+namespace sensors {
 
 SPS30Sensor::SPS30Sensor() {
         sleep_ms(1000);
@@ -79,4 +79,4 @@ void SPS30Sensor::process() {
         next_measurement_time = make_timeout_time_ms(1000);
         invoke_listeners(last_measurement);
 }
-} // namespace Sensors
+} // namespace sensors

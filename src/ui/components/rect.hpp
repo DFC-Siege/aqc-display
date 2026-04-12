@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace UI {
+namespace ui {
 struct Rect {
         uint16_t x;
         uint16_t y;
@@ -14,4 +14,4 @@ struct Rect {
                             height - padding * 2);
         }
 };
-} // namespace UI
+} // namespace ui
