@@ -7,7 +7,8 @@
 #include "display.hpp"
 #include "input_manager.hpp"
 #include "pages/page.hpp"
-#include "scd40/scd40.hpp"
+#include "scd40.hpp"
+#include "scd40/scd40_sensor.hpp"
 #include "sps30/sps30.hpp"
 #include <cstdint>
 #include <format>
@@ -16,7 +17,7 @@ namespace UI {
 
 HomePage::HomePage(Display::Display &display,
                    Input::InputManager &input_manager,
-                   Sensors::SCD40 &scd_sensor, Sensors::SPS30 &sps_sensor)
+                   Sensors::SCD40Sensor &scd_sensor, Sensors::SPS30 &sps_sensor)
     : Page(display, input_manager),
       temperature_text(Text{display, rect, "Temperature:"}),
       co2_text(Text{display, rect, "CO2:"}),
@@ -73,7 +74,7 @@ void HomePage::setup_listeners() {
         });
 }
 
-void HomePage::update_scd_metrics(const Sensors::SCD40Measurement &data) {
+void HomePage::update_scd_metrics(const models::SCD40 &data) {
         temperature_text.set_text(
             std::format("Temperature: {:.1f} C", data.temperature));
         if (data.temperature > 25.0f)

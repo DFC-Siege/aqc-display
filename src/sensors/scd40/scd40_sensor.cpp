@@ -7,11 +7,10 @@
 
 #include "hardware/gpio.h"
 #include "pico/time.h"
-#include "scd40.hpp"
+#include "scd40_sensor.hpp"
 
 namespace Sensors {
-
-SCD40::SCD40() {
+SCD40Sensor::SCD40Sensor() {
         sleep_ms(1000);
         i2c_init(I2C_PORT, BAUDRATE);
         gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
@@ -22,13 +21,13 @@ SCD40::SCD40() {
         start_measurement();
 }
 
-void SCD40::start_measurement() {
+void SCD40Sensor::start_measurement() {
         printf("starting measurement \n");
         uint8_t cmd[] = {0x21, 0xb1};
         int result = i2c_write_blocking(I2C_PORT, ADDR, cmd, 2, false);
         if (result < 0) {
                 last_measurement.error = get_error_reason(result);
-                printf("SCD40 intitial write error: %s\n",
+                printf("SCD40Sensor intitial write error: %s\n",
                        last_measurement.error.c_str());
                 invoke_listeners(last_measurement);
                 next_measurement_time = make_timeout_time_ms(1000);
@@ -37,7 +36,7 @@ void SCD40::start_measurement() {
         next_measurement_time = make_timeout_time_ms(1000);
 }
 
-void SCD40::process() {
+void SCD40Sensor::process() {
         if (get_absolute_time() < next_measurement_time) {
                 return;
         }
@@ -48,7 +47,7 @@ void SCD40::process() {
         int result = i2c_write_blocking(I2C_PORT, ADDR, read_cmd, 2, false);
         if (result < 0) {
                 last_measurement.error = get_error_reason(result);
-                printf("SCD40 write error: %s\n",
+                printf("SCD40Sensor write error: %s\n",
                        last_measurement.error.c_str());
                 invoke_listeners(last_measurement);
                 next_measurement_time = make_timeout_time_ms(1000);
@@ -60,7 +59,7 @@ void SCD40::process() {
         result = i2c_read_blocking(I2C_PORT, ADDR, data, 9, false);
         if (result < 0) {
                 last_measurement.error = get_error_reason(result);
-                printf("SCD40 read error: %s\n",
+                printf("SCD40Sensor read error: %s\n",
                        last_measurement.error.c_str());
                 invoke_listeners(last_measurement);
                 next_measurement_time = make_timeout_time_ms(1000);
@@ -74,7 +73,7 @@ void SCD40::process() {
         last_measurement.humidity =
             100.0f * (float)((data[6] << 8) | data[7]) / 65536.0f;
 
-        printf("SCD40: CO2: %u ppm, Temp: %.2f C, Humidity: %.2f%%\n",
+        printf("SCD40Sensor: CO2: %u ppm, Temp: %.2f C, Humidity: %.2f%%\n",
                last_measurement.co2, last_measurement.temperature,
                last_measurement.humidity);
 

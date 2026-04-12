@@ -1,6 +1,7 @@
 add_subdirectory(display)
 add_subdirectory(input)
 add_subdirectory(ui)
+add_subdirectory(models)
 add_subdirectory(sensors)
 
 add_executable(${PROJECT_NAME}

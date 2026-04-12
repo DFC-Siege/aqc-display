@@ -24,7 +24,7 @@
 #include "multiplexer.hpp"
 #include "requester.hpp"
 #include "result.hpp"
-#include "sensors/scd40/scd40.hpp"
+#include "sensors/scd40/scd40_sensor.hpp"
 #include "sensors/sps30/sps30.hpp"
 #include "serial_hal.hpp"
 #include "serial_transporter.hpp"
@@ -71,7 +71,8 @@ struct SCDData {
 };
 
 void core1_entry() {
-        auto *scd_sensor = (Sensors::SCD40 *)multicore_fifo_pop_blocking();
+        auto *scd_sensor =
+            (Sensors::SCD40Sensor *)multicore_fifo_pop_blocking();
         auto *sps_sensor = (Sensors::SPS30 *)multicore_fifo_pop_blocking();
         auto *serial_hal = (serial::SerialHal *)multicore_fifo_pop_blocking();
         while (true) {
@@ -92,7 +93,7 @@ int main() {
         display.initialize(Presets::Default);
 
         Input::InputManager input_manager;
-        Sensors::SCD40 scd_sensor;
+        Sensors::SCD40Sensor scd_sensor;
         Sensors::SPS30 sps_sensor;
 
         UI::PageFactory page_factory{display, input_manager, scd_sensor,

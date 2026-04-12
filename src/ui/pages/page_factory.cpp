@@ -5,13 +5,14 @@
 #include "input_manager.hpp"
 #include "page_factory.hpp"
 #include "page_type.hpp"
-#include "scd40/scd40.hpp"
+#include "scd40/scd40_sensor.hpp"
 #include "sps30/sps30.hpp"
 
 namespace UI {
 PageFactory::PageFactory(Display::Display &display,
                          Input::InputManager &input_manager,
-                         Sensors::SCD40 &scd_sensor, Sensors::SPS30 &sps_sensor)
+                         Sensors::SCD40Sensor &scd_sensor,
+                         Sensors::SPS30 &sps_sensor)
     : display(display), input_manager(input_manager), scd_sensor(scd_sensor),
       sps_sensor(sps_sensor) {
 }
