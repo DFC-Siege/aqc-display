@@ -13,7 +13,6 @@
 #include "serial_transporter.hpp"
 
 namespace communication {
-
 enum Channel : transport::TransporterId {
         Chunked,
         Direct,
