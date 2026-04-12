@@ -17,7 +17,6 @@
 #include "i_logger.hpp"
 #include "input_manager.hpp"
 #include "logger.hpp"
-#include "models/commands.hpp"
 #include "sensors/scd40/scd40_sensor.hpp"
 #include "sensors/sps30/sps30_sensor.hpp"
 #include "serial_hal.hpp"
@@ -75,30 +74,8 @@ int main() {
         ui::PageFactory page_factory{display, input_manager, scd_sensor,
                                      sps_sensor};
         ui::UIManager ui_manager{page_factory, display};
-        communication::CommunicationManager communication_manager{serial_hal};
-        auto &dispatcher = communication_manager.get_dispatcher();
-
-        scd_sensor.add_listener([&dispatcher](auto data) {
-                logging::logger().println("sending scd40");
-                const auto result =
-                    dispatcher.send(communication::Channel::Chunked,
-                                    models::Command::SCD, std::move(data));
-                if (result.failed()) {
-                        logging::logger().println(logging::LogLevel::Error, TAG,
-                                                  result.error());
-                }
-        });
-
-        sps_sensor.add_listener([&dispatcher](auto data) {
-                logging::logger().println("sending sps30");
-                const auto result =
-                    dispatcher.send(communication::Channel::Chunked,
-                                    models::Command::SPS, std::move(data));
-                if (result.failed()) {
-                        logging::logger().println(logging::LogLevel::Error, TAG,
-                                                  result.error());
-                }
-        });
+        communication::CommunicationManager communication_manager{
+            serial_hal, scd_sensor, sps_sensor};
 
         multicore_launch_core1(core1_entry);
         multicore_fifo_push_blocking((uint32_t)&scd_sensor);
