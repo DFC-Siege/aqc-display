@@ -6,32 +6,35 @@
 #include <cstring>
 #include <hardware/i2c.h>
 #include <hardware/structs/io_bank0.h>
+#include <pico/types.h>
 
 namespace sensors {
 
-SPS30Sensor::SPS30Sensor() {
+SPS30Sensor::SPS30Sensor(i2c_inst_t *port, uint sda, uint scl, uint baudrate,
+                         uint address)
+    : port(port), sda(sda), scl(scl), baudrate(baudrate), address(address) {
         sleep_ms(1000);
-        i2c_init(I2C_PORT, BAUDRATE);
-        gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
-        gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
-        gpio_pull_up(SDA_PIN);
-        gpio_pull_up(SCL_PIN);
+        i2c_init(port, baudrate);
+        gpio_set_function(sda, GPIO_FUNC_I2C);
+        gpio_set_function(scl, GPIO_FUNC_I2C);
+        gpio_pull_up(sda);
+        gpio_pull_up(scl);
 
         start_measurement();
 }
 
 void SPS30Sensor::start_measurement() {
         uint8_t cmd[] = {0x00, 0x10, 0x03, 0x00, 0xAC};
-        i2c_write_blocking(I2C_PORT, ADDR, cmd, 5, false);
+        i2c_write_blocking(port, address, cmd, 5, false);
         next_measurement_time = make_timeout_time_ms(1000);
 }
 
 bool SPS30Sensor::is_data_ready() {
         uint8_t cmd[] = {0x02, 0x02};
         uint8_t response[3];
-        if (i2c_write_blocking(I2C_PORT, ADDR, cmd, 2, false) < 0)
+        if (i2c_write_blocking(port, address, cmd, 2, false) < 0)
                 return false;
-        if (i2c_read_blocking(I2C_PORT, ADDR, response, 3, false) < 0)
+        if (i2c_read_blocking(port, address, response, 3, false) < 0)
                 return false;
         return response[1] == 0x01;
 }
@@ -48,12 +51,12 @@ void SPS30Sensor::process() {
         uint8_t read_cmd[] = {0x03, 0x00};
         uint8_t data[60];
 
-        if (i2c_write_blocking(I2C_PORT, ADDR, read_cmd, 2, false) < 0) {
+        if (i2c_write_blocking(port, address, read_cmd, 2, false) < 0) {
                 next_measurement_time = make_timeout_time_ms(1000);
                 return;
         }
 
-        if (i2c_read_blocking(I2C_PORT, ADDR, data, 60, false) < 0) {
+        if (i2c_read_blocking(port, address, data, 60, false) < 0) {
                 next_measurement_time = make_timeout_time_ms(1000);
                 return;
         }

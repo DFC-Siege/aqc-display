@@ -2,6 +2,7 @@ add_subdirectory(display)
 add_subdirectory(input)
 add_subdirectory(ui)
 add_subdirectory(models)
+add_subdirectory(communication)
 add_subdirectory(sensors)
 
 add_executable(${PROJECT_NAME}
@@ -19,13 +20,8 @@ target_link_libraries(${PROJECT_NAME}
         input_lib
         ui_lib
         sensors_lib
-        serial_hal
+        communication
         rp2040_serial_hal
-        transporter
-        direct_transporter
-        serial_transporter
-        chunked_transporter
-        dispatcher
         console_logger
         serializer
         requester

@@ -1,7 +1,7 @@
-#include <chrono>
 #include <cstdint>
 #include <cstdio>
 #include <hardware/gpio.h>
+#include <hardware/i2c.h>
 #include <hardware/uart.h>
 #include <memory>
 #include <pico/multicore.h>
@@ -10,36 +10,21 @@
 #include <pico/time.h>
 #include <utility>
 
-#include "base_transporter.hpp"
-#include "chunked_transporter.hpp"
+#include "communication/communication_manager.hpp"
 #include "console_logger.hpp"
-#include "direct_transporter.hpp"
-#include "dispatcher.hpp"
 #include "display/display.hpp"
 #include "display/presets/default.hpp"
 #include "i_logger.hpp"
 #include "input_manager.hpp"
 #include "logger.hpp"
-#include "multiplexer.hpp"
-#include "requester.hpp"
+#include "models/commands.hpp"
 #include "sensors/scd40/scd40_sensor.hpp"
 #include "sensors/sps30/sps30_sensor.hpp"
 #include "serial_hal.hpp"
-#include "serial_transporter.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 
 static constexpr auto TAG = "main";
-
-enum Channel : transport::TransporterId {
-        Chunked,
-        Direct,
-};
-
-enum Command : transport::CommandId {
-        SCD,
-        SCDRequest,
-};
 
 void core1_entry() {
         auto *scd_sensor =
@@ -61,54 +46,47 @@ int main() {
         logger->set_level(logging::LogLevel::Info);
         logging::set_logger(std::move(logger));
 
+        static constexpr auto BAUDRATE = 115200;
+        static constexpr auto TX_PIN = 9;
+        static constexpr auto RX_PIN = 8;
+        serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
+
         auto &display = display::Display::getInstance();
         display.initialize(Presets::Default);
 
         input::InputManager input_manager;
         sensors::SCD40Sensor scd_sensor;
-        sensors::SPS30Sensor sps_sensor;
+
+        static constexpr auto SPS_I2C_PORT = i2c0;
+        static constexpr auto SPS_SDA_PIN = 24;
+        static constexpr auto SPS_SCL_PIN = 21;
+        static constexpr auto SPS_BAUDRATE = 100000;
+        static constexpr auto SPS_ADDRESS = 0x69;
+        sensors::SPS30Sensor sps_sensor{SPS_I2C_PORT, SPS_SDA_PIN, SPS_SCL_PIN,
+                                        SPS_BAUDRATE, SPS_ADDRESS};
 
         ui::PageFactory page_factory{display, input_manager, scd_sensor,
                                      sps_sensor};
         ui::UIManager ui_manager{page_factory, display};
-
-        static constexpr auto MTU = 17;
-        static constexpr auto MAX_TRIES = 3;
-        static constexpr auto TIMEOUT = std::chrono::milliseconds(1000);
-        static constexpr auto BAUDRATE = 115200;
-        static constexpr auto TX_PIN = 9;
-        static constexpr auto RX_PIN = 8;
-        serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
-        auto serial_transporter =
-            std::make_unique<transport::SerialTransporter>(serial_hal, MTU);
-        transport::Multiplexer<transport::SerialTransporter> multiplexer(
-            std::move(serial_transporter));
-
-        using MuxChannel =
-            transport::Multiplexer<transport::SerialTransporter>::InnerChannel;
-        using ChunkedMuxChannel = transport::ChunkedTransporter<MuxChannel>;
-        using DirectMuxChannel = transport::DirectTransporter<MuxChannel>;
-
-        auto inner_chunked_channel =
-            multiplexer.create_inner_channel(Channel::Chunked);
-        auto chunked = std::make_unique<ChunkedMuxChannel>(
-            std::move(inner_chunked_channel), MAX_TRIES, TIMEOUT);
-
-        auto inner_direct_channel =
-            multiplexer.create_inner_channel(Channel::Direct);
-        auto direct =
-            std::make_unique<DirectMuxChannel>(std::move(inner_direct_channel));
-
-        transport::Dispatcher<transport::BaseTransporter> dispatcher;
-        dispatcher.register_transporter(Channel::Chunked, std::move(chunked));
-        dispatcher.register_transporter(Channel::Direct, std::move(direct));
-
-        transport::Requester<transport::BaseTransporter> requester(dispatcher);
+        communication::CommunicationManager communication_manager{serial_hal};
+        auto &dispatcher = communication_manager.get_dispatcher();
 
         scd_sensor.add_listener([&dispatcher](const auto &data) {
                 logging::logger().println("sending scd40");
-                const auto result = dispatcher.send(
-                    Channel::Chunked, Command::SCD, data.serialize());
+                const auto result =
+                    dispatcher.send(communication::Channel::Chunked,
+                                    models::Command::SCD, data.serialize());
+                if (result.failed()) {
+                        logging::logger().println(logging::LogLevel::Error, TAG,
+                                                  result.error());
+                }
+        });
+
+        sps_sensor.add_listener([&dispatcher](const auto &data) {
+                logging::logger().println("sending sps30");
+                const auto result =
+                    dispatcher.send(communication::Channel::Chunked,
+                                    models::Command::SPS, data.serialize());
                 if (result.failed()) {
                         logging::logger().println(logging::LogLevel::Error, TAG,
                                                   result.error());
