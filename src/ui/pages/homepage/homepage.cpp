@@ -9,7 +9,8 @@
 #include "pages/page.hpp"
 #include "scd40.hpp"
 #include "scd40/scd40_sensor.hpp"
-#include "sps30/sps30.hpp"
+#include "sps30.hpp"
+#include "sps30/sps30_sensor.hpp"
 #include <cstdint>
 #include <format>
 
@@ -17,7 +18,8 @@ namespace UI {
 
 HomePage::HomePage(Display::Display &display,
                    Input::InputManager &input_manager,
-                   Sensors::SCD40Sensor &scd_sensor, Sensors::SPS30 &sps_sensor)
+                   Sensors::SCD40Sensor &scd_sensor,
+                   Sensors::SPS30Sensor &sps_sensor)
     : Page(display, input_manager),
       temperature_text(Text{display, rect, "Temperature:"}),
       co2_text(Text{display, rect, "CO2:"}),
@@ -100,7 +102,7 @@ void HomePage::update_scd_metrics(const models::SCD40 &data) {
                 co2_text.set_foreground(Colors::PRIMARY);
 }
 
-void HomePage::update_sps_metrics(const Sensors::SPS30Measurement &data) {
+void HomePage::update_sps_metrics(const models::SPS30 &data) {
         auto set_pm_color = [](Text &t, float val, float warn, float err) {
                 if (val > err)
                         t.set_foreground(Colors::ERROR);

@@ -1,4 +1,4 @@
-#include "sps30.hpp"
+#include "sps30_sensor.hpp"
 #include "hardware/gpio.h"
 #include "pico/time.h"
 #include <cstdint>
@@ -9,7 +9,7 @@
 
 namespace Sensors {
 
-SPS30::SPS30() {
+SPS30Sensor::SPS30Sensor() {
         sleep_ms(1000);
         i2c_init(I2C_PORT, BAUDRATE);
         gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
@@ -20,13 +20,13 @@ SPS30::SPS30() {
         start_measurement();
 }
 
-void SPS30::start_measurement() {
+void SPS30Sensor::start_measurement() {
         uint8_t cmd[] = {0x00, 0x10, 0x03, 0x00, 0xAC};
         i2c_write_blocking(I2C_PORT, ADDR, cmd, 5, false);
         next_measurement_time = make_timeout_time_ms(1000);
 }
 
-bool SPS30::is_data_ready() {
+bool SPS30Sensor::is_data_ready() {
         uint8_t cmd[] = {0x02, 0x02};
         uint8_t response[3];
         if (i2c_write_blocking(I2C_PORT, ADDR, cmd, 2, false) < 0)
@@ -36,7 +36,7 @@ bool SPS30::is_data_ready() {
         return response[1] == 0x01;
 }
 
-void SPS30::process() {
+void SPS30Sensor::process() {
         if (get_absolute_time() < next_measurement_time)
                 return;
 
