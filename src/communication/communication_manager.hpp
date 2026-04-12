@@ -11,6 +11,7 @@
 #include "multiplexer.hpp"
 #include "serial_hal.hpp"
 #include "serial_transporter.hpp"
+#include "serialized_dispatcher.hpp"
 
 namespace communication {
 enum Channel : transport::TransporterId {
@@ -31,14 +32,20 @@ class CommunicationManager {
                     multiplexer.create_inner_channel(Channel::Direct);
                 auto direct = std::make_unique<DirectMuxChannel>(
                     std::move(inner_direct_channel));
-                dispatcher.register_transporter(Channel::Chunked,
-                                                std::move(chunked));
-                dispatcher.register_transporter(Channel::Direct,
-                                                std::move(direct));
+                auto dispatcher = std::make_unique<
+                    transport::Dispatcher<transport::BaseTransporter>>();
+                dispatcher->register_transporter(Channel::Chunked,
+                                                 std::move(chunked));
+                dispatcher->register_transporter(Channel::Direct,
+                                                 std::move(direct));
+                serialized_dispatcher =
+                    std::make_unique<transport::SerializedDispatcher<
+                        transport::BaseTransporter>>(std::move(dispatcher));
         }
 
-        transport::Dispatcher<transport::BaseTransporter> &get_dispatcher() {
-                return dispatcher;
+        transport::SerializedDispatcher<transport::BaseTransporter> &
+        get_dispatcher() {
+                return *serialized_dispatcher;
         }
 
       private:
@@ -52,6 +59,8 @@ class CommunicationManager {
         using DirectMuxChannel = transport::DirectTransporter<MuxChannel>;
 
         transport::Multiplexer<transport::SerialTransporter> multiplexer;
-        transport::Dispatcher<transport::BaseTransporter> dispatcher;
+        std::unique_ptr<
+            transport::SerializedDispatcher<transport::BaseTransporter>>
+            serialized_dispatcher;
 };
 } // namespace communication

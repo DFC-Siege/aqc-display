@@ -78,22 +78,22 @@ int main() {
         communication::CommunicationManager communication_manager{serial_hal};
         auto &dispatcher = communication_manager.get_dispatcher();
 
-        scd_sensor.add_listener([&dispatcher](const auto &data) {
+        scd_sensor.add_listener([&dispatcher](auto data) {
                 logging::logger().println("sending scd40");
                 const auto result =
                     dispatcher.send(communication::Channel::Chunked,
-                                    models::Command::SCD, data.serialize());
+                                    models::Command::SCD, std::move(data));
                 if (result.failed()) {
                         logging::logger().println(logging::LogLevel::Error, TAG,
                                                   result.error());
                 }
         });
 
-        sps_sensor.add_listener([&dispatcher](const auto &data) {
+        sps_sensor.add_listener([&dispatcher](auto data) {
                 logging::logger().println("sending sps30");
                 const auto result =
                     dispatcher.send(communication::Channel::Chunked,
-                                    models::Command::SPS, data.serialize());
+                                    models::Command::SPS, std::move(data));
                 if (result.failed()) {
                         logging::logger().println(logging::LogLevel::Error, TAG,
                                                   result.error());
