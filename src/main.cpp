@@ -23,7 +23,7 @@
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 
-static constexpr auto TAG = "main";
+static constexpr logging::Tag TAG = "main";
 
 void core1_entry() {
         auto *scd_sensor =

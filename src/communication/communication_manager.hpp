@@ -78,7 +78,7 @@ class CommunicationManager {
         }
 
       private:
-        static constexpr auto TAG = "CommunicationManager";
+        static constexpr logging::Tag TAG = "CommunicationManager";
         static constexpr auto MTU = 17;
         static constexpr auto MAX_TRIES = 3;
         static constexpr auto TIMEOUT = std::chrono::milliseconds(1000);
