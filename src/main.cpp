@@ -17,9 +17,9 @@
 #include "i_logger.hpp"
 #include "input_manager.hpp"
 #include "logger.hpp"
+#include "rp2040_serial_hal.hpp"
 #include "sensors/scd40/scd40_sensor.hpp"
 #include "sensors/sps30/sps30_sensor.hpp"
-#include "serial_hal.hpp"
 #include "ui/pages/page_factory.hpp"
 #include "ui/ui_manager.hpp"
 
@@ -30,7 +30,8 @@ void core1_entry() {
             (sensors::SCD40Sensor *)multicore_fifo_pop_blocking();
         auto *sps_sensor =
             (sensors::SPS30Sensor *)multicore_fifo_pop_blocking();
-        auto *serial_hal = (serial::SerialHal *)multicore_fifo_pop_blocking();
+        auto *serial_hal =
+            (serial::RP2040SerialHal *)multicore_fifo_pop_blocking();
         while (true) {
                 scd_sensor->process();
                 sps_sensor->process();
@@ -48,7 +49,7 @@ int main() {
         static constexpr auto BAUDRATE = 115200;
         static constexpr auto TX_PIN = 9;
         static constexpr auto RX_PIN = 8;
-        serial::SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
+        serial::RP2040SerialHal serial_hal(uart1, TX_PIN, RX_PIN, BAUDRATE);
 
         auto &display = display::Display::getInstance();
         display.initialize(Presets::Default);

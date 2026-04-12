@@ -24,12 +24,11 @@ enum Channel : transport::TransporterId {
         Direct,
 };
 
-class CommunicationManager {
+template <serial::SerialHal S> class CommunicationManager {
       public:
-        CommunicationManager(serial::SerialHal &serial_hal,
-                             sensors::SCD40Sensor &scd_sensor,
+        CommunicationManager(S &serial_hal, sensors::SCD40Sensor &scd_sensor,
                              sensors::SPS30Sensor &sps_sensor)
-            : multiplexer(std::make_unique<transport::SerialTransporter>(
+            : multiplexer(std::make_unique<transport::SerialTransporter<S>>(
                   serial_hal, MTU)) {
                 auto inner_chunked_channel =
                     multiplexer.create_inner_channel(Channel::Chunked);
@@ -83,12 +82,12 @@ class CommunicationManager {
         static constexpr auto MAX_TRIES = 3;
         static constexpr auto TIMEOUT = std::chrono::milliseconds(1000);
 
-        using MuxChannel =
-            transport::Multiplexer<transport::SerialTransporter>::InnerChannel;
+        using MuxChannel = transport::Multiplexer<
+            transport::SerialTransporter<S>>::InnerChannel;
         using ChunkedMuxChannel = transport::ChunkedTransporter<MuxChannel>;
         using DirectMuxChannel = transport::DirectTransporter<MuxChannel>;
 
-        transport::Multiplexer<transport::SerialTransporter> multiplexer;
+        transport::Multiplexer<transport::SerialTransporter<S>> multiplexer;
         std::unique_ptr<
             transport::SerializedDispatcher<transport::BaseTransporter>>
             serialized_dispatcher;
