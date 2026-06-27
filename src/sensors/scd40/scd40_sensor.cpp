@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <hardware/i2c.h>
@@ -75,12 +76,23 @@ void SCD40Sensor::process() {
             -45.0f + 175.0f * (float)((data[3] << 8) | data[4]) / 65536.0f;
         last_measurement.humidity =
             100.0f * (float)((data[6] << 8) | data[7]) / 65536.0f;
+        last_measurement.apparent_temperature = calculate_apparent_temperature(
+            last_measurement.temperature, last_measurement.humidity);
 
-        printf("SCD40Sensor: CO2: %u ppm, Temp: %.2f C, Humidity: %.2f%%\n",
+        printf("SCD40Sensor: CO2: %u ppm, Temp: %.2f C, Apparent: %.2f C, "
+               "Humidity: %.2f%%\n",
                last_measurement.co2, last_measurement.temperature,
+               last_measurement.apparent_temperature,
                last_measurement.humidity);
 
         next_measurement_time = make_timeout_time_ms(5000);
         invoke_listeners(last_measurement);
+}
+
+float SCD40Sensor::calculate_apparent_temperature(float temperature,
+                                                  float humidity) {
+        float e = (humidity / 100.0f) * 6.105f *
+                  expf((17.27f * temperature) / (237.7f + temperature));
+        return temperature + 0.33f * e - 4.00f;
 }
 } // namespace sensors

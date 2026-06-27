@@ -23,5 +23,7 @@ class SCD40Sensor : public Sensor<models::SCD40> {
         uint address;
 
         void start_measurement();
+        static float calculate_apparent_temperature(float temperature,
+                                                    float humidity);
 };
 } // namespace sensors

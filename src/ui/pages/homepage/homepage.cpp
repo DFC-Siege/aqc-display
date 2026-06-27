@@ -22,6 +22,7 @@ HomePage::HomePage(display::Display &display,
                    sensors::SPS30Sensor &sps_sensor)
     : Page(display, input_manager),
       temperature_text(Text{display, rect, "Temperature:"}),
+      apparent_temperature_text(Text{display, rect, "Feels like:"}),
       co2_text(Text{display, rect, "CO2:"}),
       humidity_text(Text{display, rect, "Humidity:"}),
       pm1_text(Text{display, rect, "PM1:"}),
@@ -55,13 +56,14 @@ void HomePage::setup_positions() {
         const uint16_t h = temperature_text.get_font().height;
 
         temperature_text.set_position({0, 0});
-        co2_text.set_position({0, h});
-        humidity_text.set_position({0, static_cast<uint16_t>(h * 2)});
+        apparent_temperature_text.set_position({0, h});
+        co2_text.set_position({0, static_cast<uint16_t>(h * 2)});
+        humidity_text.set_position({0, static_cast<uint16_t>(h * 3)});
 
-        pm1_text.set_position({0, static_cast<uint16_t>(h * 4)});
-        pm2_text.set_position({0, static_cast<uint16_t>(h * 5)});
-        pm4_text.set_position({0, static_cast<uint16_t>(h * 6)});
-        pm10_text.set_position({0, static_cast<uint16_t>(h * 7)});
+        pm1_text.set_position({0, static_cast<uint16_t>(h * 5)});
+        pm2_text.set_position({0, static_cast<uint16_t>(h * 6)});
+        pm4_text.set_position({0, static_cast<uint16_t>(h * 7)});
+        pm10_text.set_position({0, static_cast<uint16_t>(h * 8)});
 }
 
 void HomePage::setup_listeners() {
@@ -85,6 +87,15 @@ void HomePage::update_scd_metrics(const models::SCD40 &data) {
                 temperature_text.set_foreground(Colors::WARNING);
         else
                 temperature_text.set_foreground(Colors::PRIMARY);
+
+        apparent_temperature_text.set_text(
+            std::format("Feels like: {:.1f} C", data.apparent_temperature));
+        if (data.apparent_temperature > 25.0f)
+                apparent_temperature_text.set_foreground(Colors::ERROR);
+        else if (data.apparent_temperature > 23.0f)
+                apparent_temperature_text.set_foreground(Colors::WARNING);
+        else
+                apparent_temperature_text.set_foreground(Colors::PRIMARY);
 
         humidity_text.set_text(
             std::format("Humidity: {:.1f} %", data.humidity));
@@ -129,6 +140,7 @@ void HomePage::draw() {
         Page::draw();
 
         temperature_text.draw();
+        apparent_temperature_text.draw();
         co2_text.draw();
         humidity_text.draw();
         pm1_text.draw();

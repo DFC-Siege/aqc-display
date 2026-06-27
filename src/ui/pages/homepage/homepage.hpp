@@ -22,6 +22,7 @@ class HomePage : public Page {
       private:
         static constexpr auto PADDING = 8;
         Text temperature_text;
+        Text apparent_temperature_text;
         Text co2_text;
         Text humidity_text;
         Text pm1_text;
